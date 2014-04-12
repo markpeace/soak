@@ -1,0 +1,21 @@
+<div class="bar bar-header">
+  <button class="button button-icon icon ion-settings" ng-click="settingsModal.show()"  ></button>
+  <div class="title">The Birley Big Bang</div>
+  <button class="button button-icon icon ion-pinpoint" ui-sref="checkin"></button>  
+</div>
+
+<ion-tabs tabs-style="tabs-icon-top">
+  
+  <ion-tab title="Hunt" icon="ion-map" href="#/tab/hunt">    
+    <ion-nav-view name="hunt-tab"></ion-nav-view>
+  </ion-tab>
+  
+  <ion-tab title="Schedule" icon="ion-calendar" href="#/tab/schedule">    
+    <ion-nav-view name="schedule-tab"></ion-nav-view>
+  </ion-tab>
+  
+  <ion-tab title="Badges" icon="ion-star" href="#/tab/badges">    
+    <ion-nav-view name="badges-tab"></ion-nav-view>
+  </ion-tab>
+  
+</ion-tabs>

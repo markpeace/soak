@@ -1,0 +1,32 @@
+<ion-view>
+  <div class="splash-screen">
+    <div class="splash-logo computer-font">The Birley Big Bang</div>
+    <div class="splash-player-count computer-font">- Play Along - </div>
+    {{newUser.email}}
+  </div>
+  <div class="splash-login-panel" style="background-color:white;">
+    <label class="item item-input">      
+      <input type="text" placeholder="MMU Email Address" ng-model="newUser.email" class="computer-font small-font" style="text-align:center !important;">
+      <i class="icon ion-checkmark placeholder-icon" ng-show="evaluate.email()" style="color:green;"></i>
+      <i class="icon ion-close placeholder-icon" ng-hide="evaluate.email()"  style="color:red;"></i>
+    </label>
+    
+    <div class="button-bar">
+      <button class="button button-light computer-font medium-font" style="color:#A8A8A8;" ng-click="modal.show()">{{programmeLabel}}</button>      
+    </div> 
+    <label class="item item-input">
+      <input type="password" placeholder="Password" ng-model="newUser.password"  class="computer-font small-font" style="text-align:center !important;">
+      <i class="icon ion-checkmark placeholder-icon" ng-show="evaluate.password()" style="color:green;"></i>
+      <i class="icon ion-close placeholder-icon" ng-hide="evaluate.password()"  style="color:red;"></i>
+    </label>
+    <label class="item item-input">
+      <input type="password" placeholder="Confirm Password" ng-model="newUser.confirm_password"  class="computer-font small-font" style="text-align:center !important;">
+      <i class="icon ion-checkmark placeholder-icon" ng-show="evaluate.confirm_password()" style="color:green;"></i>
+      <i class="icon ion-close placeholder-icon" ng-hide="evaluate.confirm_password()"  style="color:red;"></i>
+    </label>
+    <button class="button button-full button-dark computer-font small-font" ng-click="signup()">
+      Register
+    </button>
+  </div>
+</ion-view>
+

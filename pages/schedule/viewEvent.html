@@ -1,0 +1,42 @@
+<div class="bar bar-header bar-energized">
+  <button class="button button-icon icon ion-ios7-arrow-back" ui-sref="tabs.schedule"></button>
+  <div class="title"></div>
+</div>
+
+<ion-content class="has-header">
+  <div class="list card">
+   
+    <div class="item item-icon-right" >     
+        <p ng-click="personinfoModal.show()">
+          {{ event.get('series').get('label') }} with {{ event.get("host").get("forename") }} {{ event.get("host").get("surname")}}
+          <i class="icon ion-ios7-information-outline"></i>
+      </p>
+    </div>    
+    
+    
+    <div class="item">
+      <h2>{{ event.get('title') }}</h2>
+      <p>{{ moment(event.get('time')).format("dddd, MMMM Do @ h:mm a"); }}</p>
+    </div>
+
+    <div class="item item-icon-right" ng-show="booking.attending">     
+        <p ng-click="locationinfoModal.show()">
+          {{ event.get('location').get('label') }}  
+          <i class="icon ion-ios7-information-outline"></i>
+      </p>
+    </div>    
+    
+    <div class="item item-body">
+      <p>
+        {{ event.get('description') }}
+      </p>
+      <p style="text-align:right; font-size:0.6em;">
+        {{ event.get('capacity') - bookings }} Places Available               
+      </p>
+    </div>
+    
+    
+    <ion-toggle class="item item-footer" ng-model="booking.attending" ng-hide="(event.get('capacity') - bookings)==0 && booking.attending==false">Indicate Your Attendence:</ion-toggle>  
+    <div class="item item-footer" style="text-align:center;" ng-show="(event.get('capacity') - bookings)==0  && booking.attending==false" >This Event is Fully Booked</div>
+  </div>
+</ion-content>
