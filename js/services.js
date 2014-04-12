@@ -1,5 +1,5 @@
-bbb.service('ParseService', [function() {
-  var app_id = "kvhyxkkmVahmIxvuv1Ai2xpVWFZNg4PdEFmtUpXj";
-  var js_key = "3cN0yl8DTPOZrIlNmEmVH9LTYRxhfuGdFOOLkOfc";
+brewbox.service('ParseService', [function() {
+  var app_id = "I3LuugrX9AdT6HFCDMADzMq88zMwIW93VuQgMV87";
+  var js_key = "kVfJ4hf18XovsqGpr1LTYuLrHTjR0XqDJjhUQKnG";
   Parse.initialize(app_id, js_key);
 }]);
