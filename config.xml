@@ -6,10 +6,10 @@
         id        = "com.mmu.bbb"
         version   = "1.0.0">
 
-    <name>The Big Birley Bang</name>
+    <name>BrewBox</name>
 
     <description>
-      An App to Support Induction 2014
+      BrewBox
     </description>
 
     <author href="http://www.mmu.ac.uk/ioe" email="m.peace@mmu.ac.uk">
