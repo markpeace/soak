@@ -1,38 +1,38 @@
 <ion-view>
     <ion-side-menus>
-    
+
         <ion-pane ion-side-menu-content>
-            
+
             <div class="bar bar-header bar-positive">
                 <button class="button button-icon icon ion-navicon" ng-click="showLeft()"></button>
                 <div class="h1 title">Header Buttons</div>
                 <button class="button button-icon icon ion-navicon" ng-click="showRight()"></button>
             </div>
-            
+
             <ion-content class="has-header has-padding">
-                Centre content
+                <ion-nav-view name="centre-panel"></ion-nav-view>
             </ion-content>
 
         </ion-pane>
-    
+
         <ion-side-menu side="left">
             <header class="bar bar-header bar-dark">
                 <h1 class="title">Left</h1>
             </header>
-            <ion-content class="had-header">
-                test
+            <ion-content class="has-header">
+                <ion-nav-view name="left-panel"></ion-nav-view>
             </ion-content>
         </ion-side-menu>
-        
-         <ion-side-menu side="right">
+
+        <ion-side-menu side="right">
             <header class="bar bar-header bar-dark">
                 <h1 class="title">Right</h1>
             </header>
-            <ion-content class="had-header">
-                test
+            <ion-content class="has-header">
+                <ion-nav-view name="right-panel"></ion-nav-view>
             </ion-content>
         </ion-side-menu>
-        
+
     </ion-side-menus>
- 
- </ion-view>
+
+</ion-view>

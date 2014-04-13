@@ -1,4 +1,4 @@
-brewbox.controller('Splash', function($scope, ParseService, $ionicSideMenuDelegate) { 
+brewbox.controller('MainUI', function($scope, ParseService, $ionicSideMenuDelegate) { 
     $scope.showLeft = function() {
         $ionicSideMenuDelegate.toggleLeft();
     };
