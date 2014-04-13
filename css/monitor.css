@@ -1,0 +1,17 @@
+.monitor .component {
+    display: inline;
+    position: absolute;
+    top:10%; left:10%;
+    
+    text-align: center;
+    
+    
+    width: 150px; height:150px;
+    
+    border-radius: 50%;
+    
+    background-color:whitesmoke;
+    border: 4px black solid;
+    
+
+}

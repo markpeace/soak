@@ -11,7 +11,8 @@ brewbox.config(function($stateProvider, $urlRouterProvider) {
         url: '/splash',
         views: {
             'centre-panel': {
-                templateUrl: 'pages/monitor.html'
+                templateUrl: 'pages/monitor.html',
+                controller: 'Monitor'
             },
             'left-panel': {
                 templateUrl: 'pages/menu.html'
