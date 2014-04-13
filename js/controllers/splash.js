@@ -1,3 +1,9 @@
-brewbox.controller('Splash', function($scope, ParseService) { 
- console.log("splash controller")
+brewbox.controller('Splash', function($scope, ParseService, $ionicSideMenuDelegate) { 
+    $scope.showLeft = function() {
+        $ionicSideMenuDelegate.toggleLeft();
+    };
+    $scope.showRight = function() {
+        $ionicSideMenuDelegate.toggleRight();
+    };
+    
 });
