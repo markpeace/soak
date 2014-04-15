@@ -1,6 +1,30 @@
 brewbox.controller('Monitor', function($scope, ParseService, $ionicSideMenuDelegate) { 
-       var c = document.getElementById("myCanvas");
-        var ctx = c.getContext("2d");
-        ctx.fillStyle = "#FF0000";
-        ctx.fillRect(0,0,150,75);
+
+    var polarToCartesian = function (centerX, centerY, radius, angleInDegrees) {
+        var angleInRadians = (angleInDegrees-90) * Math.PI / 180.0;
+
+        return {
+            x: centerX + (radius * Math.cos(angleInRadians)),
+            y: centerY + (radius * Math.sin(angleInRadians))
+        };
+    }
+
+    $scope.describeArc = function(x, y, radius, startAngle, endAngle){
+
+        var start = polarToCartesian(x, y, radius, endAngle);
+        var end = polarToCartesian(x, y, radius, startAngle);
+
+        var arcSweep = endAngle - startAngle <= 180 ? "0" : "1";
+
+        var d = [
+            "M", start.x, start.y, 
+            "A", radius, radius, 0, arcSweep, 0, end.x, end.y
+        ].join(" ");
+
+        return d;       
+    }
+
+    
+    $scope.r=[1,2,3]
+    
 });
