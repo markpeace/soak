@@ -1,23 +1,8 @@
 <ion-view class="monitor">
 
-    <div ng-repeat="a in r" style="display:block; text-align:center; padding-top:25px;">
+    <div ng-repeat="a in r" style="display:block; text-align:center; padding-top:30px;">
 
-        <svg width="120px" height="120px" version="1.1" xmlns="http://www.w3.org/2000/svg"   >
-
-            <path d="{{ describeArc(60, 60, 50, -160, 100) }}" stroke="CornflowerBlue" stroke-width="10" stroke-dasharray="10,5" fill="none" />
-
-            <path d="{{ describeArc(60, 60, 50, 100, 160 ) }}" stroke="silver" stroke-width="10" stroke-dasharray="10,5" fill="none" />
-
-
-            <text x="60" y="50" text-anchor="middle" style="font-size:0.8em;">Hot Liquor Tun</text>
-
-            <text x="60" y="80" text-anchor="middle" style="font-size:0.8em;">86&deg;C</text>
-
-
-            <circle cx="60" cy="100" r="3" fill="Salmon" />
-
-
-        </svg>
+        <brew-monitor-component></brew-monitor-component>
 
     </div>
 
