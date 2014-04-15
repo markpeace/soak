@@ -1,20 +1,20 @@
 <ion-view class="monitor">
 
-    <div ng-repeat="a in r" style="display:block; text-align:center;">
+    <div ng-repeat="a in r" style="display:block; text-align:center; padding-top:20px;">
 
-        <svg width="150px" height="150px" version="1.1" xmlns="http://www.w3.org/2000/svg"   >
+        <svg width="120px" height="120px" version="1.1" xmlns="http://www.w3.org/2000/svg"   >
 
-            <path d="{{ describeArc(75, 75, 50, -160, 100) }}" stroke="CornflowerBlue" stroke-width="10" stroke-dasharray="10,5" fill="none" />
+            <path d="{{ describeArc(60, 60, 50, -160, 100) }}" stroke="CornflowerBlue" stroke-width="10" stroke-dasharray="10,5" fill="none" />
 
-            <path d="{{ describeArc(75, 75, 50, 100, 160 ) }}" stroke="silver" stroke-width="10" stroke-dasharray="10,5" fill="none" />
-
-
-            <text x="75" y="70" text-anchor="middle" style="font-size:0.8em;">Hot Liquor Tun</text>
-
-            <text x="75" y="90" text-anchor="middle" style="font-size:0.8em;">86&deg;C</text>
+            <path d="{{ describeArc(60, 60, 50, 100, 160 ) }}" stroke="silver" stroke-width="10" stroke-dasharray="10,5" fill="none" />
 
 
-            <circle cx="75" cy="115" r="3" fill="Salmon" />
+            <text x="60" y="50" text-anchor="middle" style="font-size:0.8em;">Hot Liquor Tun</text>
+
+            <text x="60" y="80" text-anchor="middle" style="font-size:0.8em;">86&deg;C</text>
+
+
+            <circle cx="60" cy="100" r="3" fill="Salmon" />
 
 
         </svg>
