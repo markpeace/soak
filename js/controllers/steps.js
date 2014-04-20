@@ -1,84 +1,52 @@
 brewbox.controller('Steps', function($scope, ParseService, $ionicSideMenuDelegate) { 
 
-        $brewParamaters={
-                HLT_initialVolume:40,
-                HLT_strikeTemp: 86,
-                HLT_topupVolume:10,
-                MSH_targetTemperature: 68,
-                MSH_strikeVolume:18
-                MSH_mashoutTemperature:75,
-                MSH_firstSparge=3,
-                MSH_secondSparge=15
-        }
+        brewParameters={
+             
+                // VARIABLES WHICH CHANGE DEPENDING ON THE RECIPE
+                MSH_grain_weight: 5,       //in kg
+                MSH_temperature: 68,       // in C
+                MSH_thickness: 2.7,        // in l/kg
+                MSH_time: 60,              // in mins
+                MSH_mashout_temp: 75,      // in C
+                CPR_boiltime:60,           // in mins
+                FMT_volumne: 21,           // in l
 
+                // EQUIPMENT PROFILE
+                MSH_deadspace: 2,          // in l
+                CPR_deadspace: 2,          // in l
+                CPR_evaporationrate: 16,   // in %
+
+
+                //AUTOCALCULATIONS
+                self: this,
+                calculate: function () {
+                        self.CPR_preboil_volume = 10
+                }
+
+        }
+        brewParameters.calculate();
+
+        $scope.currentStep=1;        
 
         $scope.brewSteps=[{
 
-                title: 'Part Fill HLT',             
-                subtitle: '{{HLT_initialVolume}}l',
-
-                dependentOnPriorStep: false,
-                startOn: 'MANUAL',
-                startCommands: [
-                        'set_HLT_volume: {{ HLT_initialVolume }}',                        
-                ],                
-
-                finishOn: 'READING',
-                finishReadingStatement: '<<HLT_Volume>> == {{ HLT_initialVolume }}',
-                finishCommands: [],
-
-                canInterrupt: true
+                title: "Fill HLT",
+                subtitle: "50 litres / 50 litres",
+                percentageComplete: 100
 
         },{
 
-                title: 'Preheat HLT',             
-                subtitle: '{{HLT_strikeTemp}}&deg;C',
-
-                dependentOnPriorStep: true,
-                startOn: 'AUTO',
-                startCommands: [
-                        'set_HLT_temperature: {{ HLT_strikeTemp }}',                        
-                ],                
-
-                finishOn: 'READING',
-                finishReadingStatement: '<<HLT_temperature>> == {{ HLT_strikeTemp }}',
-                finishCommands: [],
-
-                canInterrupt: true
+                title: "Heat Strike Water",
+                subtitle: "32&deg;C / 86&deg;C",
+                percentageComplete: 37
 
         },{
-                
-                title: 'Transfer Strike Water',             
-                subtitle: '{{MSH_strikeVolume}}l',
-                
-                dependentOnPriorStep: true,
-                startOn: 'MANUAL',
-                startCommands: [
-                        'unfill_HLT {{ MSH_strikeVolume }}',
-                ],                
-                
-                finishOn: 'NULL',
-                finishReadingStatement: null,
-                finishCommands: [],
-                
-                canInterrupt: false
 
-        },{
-                
-                title: 'Set Mash Temperature',             
-                subtitle: '{{MSH_targetTemperature}}&deg;C',
-                
-                dependentOnPriorStep: true,
-                startOn: 'AUTO',
-                startCommands: [
-                        'set_HLT_temperature: {{ MSH_targetTemperature }}',                        
-                ],                
-                
-                finishOn: 'NULL',
-                finishReadingStatement: null,
-                finishCommands: [],
-                
-                canInterrupt: false
+                title: "Transfer Strike Water",
+                subtitle: "0 litres / 19 litres",
+                percentageComplete: 0
 
         }]
+     
+
 });
