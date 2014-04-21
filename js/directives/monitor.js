@@ -1,38 +1,44 @@
 brewbox.directive('brewMonitorComponent', function() {
-    return {
-        restrict: 'E',
-        templateUrl: 'pages/_directives/brewMonitorComponent.html',
-        controller:'BrewMonitorComponent'
-    }
+        return {
+                restrict: 'E',
+                scope: {
+                        component: "="                        
+                },
+                templateUrl: 'pages/_directives/brewMonitorComponent.html',
+                controller:'BrewMonitorComponent'
+        }
 });
 
-brewbox.controller('BrewMonitorComponent', function($scope, ParseService, $ionicSideMenuDelegate) { 
-    
-    var polarToCartesian = function (centerX, centerY, radius, angleInDegrees) {
-        var angleInRadians = (angleInDegrees-90) * Math.PI / 180.0;
 
-        return {
-            x: centerX + (radius * Math.cos(angleInRadians)),
-            y: centerY + (radius * Math.sin(angleInRadians))
-        };
-    }
+brewbox.controller('BrewMonitorComponent', function($scope, HardwareInterface, $ionicSideMenuDelegate) { 
+        
+        $scope.hardwareInterface=HardwareInterface
 
-    $scope.describeArc = function(x, y, radius, startAngle, endAngle){
+        var polarToCartesian = function (centerX, centerY, radius, angleInDegrees) {
+                var angleInRadians = (angleInDegrees-90) * Math.PI / 180.0;
 
-        var start = polarToCartesian(x, y, radius, endAngle);
-        var end = polarToCartesian(x, y, radius, startAngle);
+                return {
+                        x: centerX + (radius * Math.cos(angleInRadians)),
+                        y: centerY + (radius * Math.sin(angleInRadians))
+                };
+        }
 
-        var arcSweep = endAngle - startAngle <= 180 ? "0" : "1";
+        $scope.describeArc = function(x, y, radius, startAngle, endAngle){
 
-        var d = [
-            "M", start.x, start.y, 
-            "A", radius, radius, 0, arcSweep, 0, end.x, end.y
-        ].join(" ");
+                var start = polarToCartesian(x, y, radius, endAngle);
+                var end = polarToCartesian(x, y, radius, startAngle);
 
-        return d;       
-    }
+                var arcSweep = endAngle - startAngle <= 180 ? "0" : "1";
 
-    
-    $scope.r=[1,2,3]
-   
+                var d = [
+                        "M", start.x, start.y, 
+                        "A", radius, radius, 0, arcSweep, 0, end.x, end.y
+                ].join(" ");
+
+                return d;       
+        }
+
+
+        $scope.r=[1,2,3]
+
 });
