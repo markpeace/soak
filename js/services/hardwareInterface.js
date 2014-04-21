@@ -1,0 +1,3 @@
+brewbox.service('HardwareInterface', [function() {
+        
+}]);
