@@ -1,23 +1,33 @@
-brewbox.service('HardwareInterface', [function() {
+brewbox.factory('HardwareInterface', function($http, $interval) {
+        var data = { pulseInterval: 5000, requests: 0, server:"http://telnetservice.herokuapp.com/bowerfold.dlinkddns.com"  };
+        var pollhardware = function() {
+
+
+
+
+                angular.forEach([{
+                        variable: 'HLT TEMP',
+                        port: 200,
+                        command: 'HLT GET TEMP'
+                },{
+                        variable: 'HLT VOL',
+                        port: 200,
+                        command: 'HLT GET VOL'
+                }],function(val) {
+                        $http({method: 'GET', url: data.server+"/"+val.port+"/"+val.command})
+                        .success(function(data, status, headers, config) {
+                                data.latestData = data;
+                                data.calls++;
+                        })                 
+                })
+
+
+
+        };
+
+        $interval(pollhardware, data.pulseInterval)
 
         return {
-                HLT: {
-                        capacity: 100,
-                        content: Math.round(Math.random()*100), 
-                        fullness: function() { return self.content/self.capacity * 100 },
-                        temperature: Math.round(Math.random()*100)
-                }, 
-                MSH: {
-                        capacity: 37,
-                        content: Math.round(Math.random()*37),                         
-                        fullness: self.content/self.capacity * 100,
-                        temperature: Math.round(Math.random()*100)
-                },
-                CPR: {
-                        capacity: 50,
-                        content: Math.round(Math.random()*50),     
-                        fullness: self.content/self.capacity * 100,                        
-                        temperature: Math.round(Math.random()*100)
-                }
-        }   
-}]);        
+                data: data
+        };
+});

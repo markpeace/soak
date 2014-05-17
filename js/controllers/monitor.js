@@ -1,4 +1,4 @@
-brewbox.controller('Monitor', function($scope, ParseService, $ionicSideMenuDelegate, $http) { 
+brewbox.controller('Monitor', function($scope, ParseService, $ionicSideMenuDelegate, $http, HardwareInterface) { 
 
         $scope.components=[{
                 title: 'Hot Liquor Tun',
@@ -19,19 +19,8 @@ brewbox.controller('Monitor', function($scope, ParseService, $ionicSideMenuDeleg
                         level: { colour: 'GoldenRod', capacity: 50 } 
                 }
         }] 
+        
+        console.log(HardwareInterface.data)
 
-
-
-        $http({method: 'GET', url: 'http://telnetservice.herokuapp.com/bowerfold.dlinkddns.com/200/HLT%20GET%20VOL'}).
-        success(function(data, status, headers, config) {
-                console.log(data)
-                // this callback will be called asynchronously
-                // when the response is available
-        }).
-        error(function(data, status, headers, config) {
-                console.log("nope")
-                // called asynchronously if an error occurs
-                // or server returns response with an error status.
-        });        
 
 });
