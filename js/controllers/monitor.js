@@ -20,7 +20,5 @@ brewbox.controller('Monitor', function($scope, ParseService, $ionicSideMenuDeleg
                 }
         }] 
         
-        console.log(HardwareInterface.data)
-
 
 });

@@ -3,7 +3,8 @@ brewbox.controller('Steps', function($scope, ParseService, $ionicSideMenuDelegat
         brewParameters={
              
                 // VARIABLES WHICH CHANGE DEPENDING ON THE RECIPE
-                MSH_grain_weight: 5,       //in kg
+                MSH_grain_weight: 5,       // in kg
+                MSH_hop_weight: 200,       // in g
                 MSH_temperature: 68,       // in C
                 MSH_thickness: 2.7,        // in l/kg
                 MSH_time: 60,              // in mins
