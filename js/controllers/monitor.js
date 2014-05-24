@@ -19,6 +19,7 @@ brewbox.controller('Monitor', function($scope, ParseService, $ionicSideMenuDeleg
                         level: { colour: 'GoldenRod', capacity: 50 } 
                 }
         }] 
-        
+   
+        $scope.HardwareInterface=HardwareInterface;
 
 });
