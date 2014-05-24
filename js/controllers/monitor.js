@@ -1,4 +1,4 @@
-brewbox.controller('Monitor', function($scope, ParseService, $ionicSideMenuDelegate, $http, HardwareInterface) { 
+brewbox.controller('Monitor', function($scope, ParseService, $ionicSideMenuDelegate, $http) { 
 
         $scope.components=[{
                 title: 'Hot Liquor Tun',
@@ -18,8 +18,6 @@ brewbox.controller('Monitor', function($scope, ParseService, $ionicSideMenuDeleg
                 indicators: { 
                         level: { colour: 'GoldenRod', capacity: 50 } 
                 }
-        }] 
-   
-        $scope.HardwareInterface=HardwareInterface;
+        }]   
 
 });

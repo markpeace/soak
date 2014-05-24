@@ -8,7 +8,7 @@ brewbox.config(function($stateProvider, $urlRouterProvider) {
         templateUrl: 'pages/mainUI.html'
     })
     .state('ui.splash', {
-        url: '/splash',
+        url: '/splash/',
         views: {
             'centre-panel': {
                 templateUrl: 'pages/monitor.html',
@@ -23,6 +23,6 @@ brewbox.config(function($stateProvider, $urlRouterProvider) {
         }
     })
 
-    $urlRouterProvider.otherwise("/ui/splash");
+    $urlRouterProvider.otherwise("/ui/splash/");
 
 })

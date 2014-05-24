@@ -11,4 +11,4 @@ angular.forEach(['d'], function(name) {
         });
 });
 
-//brewbox.run(function(HardwareInterface) {});
+brewbox.run(function(HardwareInterface) {});
