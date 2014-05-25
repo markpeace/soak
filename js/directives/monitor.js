@@ -10,9 +10,7 @@ brewbox.directive('brewMonitorComponent', function() {
 });
 
 
-brewbox.controller('BrewMonitorComponent', function($scope, $ionicSideMenuDelegate) { 
-        
-        $scope.hardwareInterface=[]
+brewbox.controller('BrewMonitorComponent', function($scope, $ionicSideMenuDelegate, HardwareInterface) { 
 
         var polarToCartesian = function (centerX, centerY, radius, angleInDegrees) {
                 var angleInRadians = (angleInDegrees-90) * Math.PI / 180.0;

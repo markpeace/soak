@@ -1,6 +1,6 @@
 brewbox.factory('HardwareInterface', function($http, $interval) {
         
-        var setting = {
+        var settings = {
                 activated: false,
                 pulseInterval: 5000,
                 requestsMade: 0,
@@ -17,12 +17,12 @@ brewbox.factory('HardwareInterface', function($http, $interval) {
         }]
         
         processRequest = function () {
-                setting.requestsMade++;
-                console.log(setting.requestsMade)
+                settings.requestsMade++;
         }
-        if (!setting.activated) { setting.activated=true; $interval(processRequest, setting.pulseInterval)}        
+        if (!settings.activated) { settings.activated=true; $interval(processRequest, settings.pulseInterval)}        
         
         return {
+                settings: settings,
                 requestQueue: requestQueue,
                 hardwareReadings: hardwareReadings
         }

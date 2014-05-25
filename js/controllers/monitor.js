@@ -1,10 +1,13 @@
-brewbox.controller('Monitor', function($scope, ParseService, $ionicSideMenuDelegate, $http) { 
+brewbox.controller('Monitor', function($scope, HardwareInterface) { 
+
+        $scope.requestsMade = HardwareInterface.requestsMade;
 
         $scope.components=[{
                 title: 'Hot Liquor Tun',
                 hardwareReference: 'HLT',                             
                 indicators: { 
-                        level: { colour: 'CornflowerBlue', capacity: 100 } 
+                        level: { colour: 'CornflowerBlue', capacity: 100 }
+                        temperature: { watchVariable: 'HardwareInterface.hardwareReadings.HLT.temp' }
                 }
         },{
                 title: 'Mash Tun',
