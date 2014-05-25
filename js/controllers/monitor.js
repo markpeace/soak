@@ -5,7 +5,8 @@ brewbox.controller('Monitor', function($scope) {
                 hardwareReference: 'hlt',
                 indicators: { 
                         level: { colour: 'CornflowerBlue' },
-                        temperature: { readingVariable: 'temp' }
+                        temperature: { readingVariable: 'temp' },
+                        heatingElement: true
                 }
         },{
                 title: 'Mash Tun',      
