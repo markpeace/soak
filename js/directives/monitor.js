@@ -14,6 +14,10 @@ brewbox.controller('BrewMonitorComponent', function($scope, $ionicSideMenuDelega
 
         $scope.hardwareReadings = HardwareInterface.hardwareReadings();
         
+        $scope.calculateFullness = function() {
+                return Math.round(-160+(($scope.hardwareReadings[$scope.component.hardwareReference].readings['vol'] / $scope.hardwareReadings[$scope.component.hardwareReference].parameters['maximumVolume'])*320),0)
+        }
+        
         var polarToCartesian = function (centerX, centerY, radius, angleInDegrees) {
                 var angleInRadians = (angleInDegrees-90) * Math.PI / 180.0;
 

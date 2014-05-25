@@ -28,7 +28,7 @@ brewbox.factory('HardwareInterface', function($http, $interval) {
                 requeueAfterProcessing: false,
         },{
                 port: 200,
-                command: "HLT SET TEMP 0",
+                command: "HLT SET TEMP 100",
                 assignResponseTo: "temp",
                 requeueAfterProcessing: false,
         }]
