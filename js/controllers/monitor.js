@@ -4,21 +4,23 @@ brewbox.controller('Monitor', function($scope) {
                 title: 'Hot Liquor Tun',      
                 hardwareReference: 'hlt',
                 indicators: { 
-                        level: { colour: 'CornflowerBlue', capacity: 100 },
+                        level: { colour: 'CornflowerBlue' },
                         temperature: { readingVariable: 'temp' }
                 }
-        }/*,{
-                title: 'Mash Tun',
-                hardwareReference: 'MSH',
+        },{
+                title: 'Mash Tun',      
+                hardwareReference: 'hlt',
                 indicators: { 
-                        level: { colour: 'GoldenRod', capacity: 38 } 
+                        level: { colour: 'GoldenRod' },
+                        temperature: { readingVariable: 'temp' }
                 }
         },{
-                title: 'Copper',
-                hardwareReference: 'CPR',
+                title: 'Copper',      
+                hardwareReference: 'hlt',
                 indicators: { 
-                        level: { colour: 'GoldenRod', capacity: 50 } 
+                        level: { colour: 'GoldenRod' },
+                        temperature: { readingVariable: 'temp' }
                 }
-        }*/]   
+        }]   
         
 });

@@ -13,11 +13,13 @@ brewbox.directive('brewMonitorComponent', function() {
 brewbox.controller('BrewMonitorComponent', function($scope, $ionicSideMenuDelegate, HardwareInterface) { 
 
         $scope.hardwareReadings = HardwareInterface.hardwareReadings();
-        
+
         $scope.calculateFullness = function() {
-                return Math.round(-160+(($scope.hardwareReadings[$scope.component.hardwareReference].readings['vol'] / $scope.hardwareReadings[$scope.component.hardwareReference].parameters['maximumVolume'])*320),0)
+                var v= Math.round(-160+(($scope.hardwareReadings[$scope.component.hardwareReference].readings['vol'] / $scope.hardwareReadings[$scope.component.hardwareReference].parameters['maximumVolume'])*320),0)
+                if(isNaN(v)) {v=-160}
+                return v
         }
-        
+
         var polarToCartesian = function (centerX, centerY, radius, angleInDegrees) {
                 var angleInRadians = (angleInDegrees-90) * Math.PI / 180.0;
 
@@ -42,5 +44,5 @@ brewbox.controller('BrewMonitorComponent', function($scope, $ionicSideMenuDelega
                 return d;       
         }        
 
-        
+
 });
