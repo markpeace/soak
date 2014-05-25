@@ -1,4 +1,4 @@
-brewbox.controller('Steps', function($scope, $ionicSideMenuDelegate) { 
+brewbox.controller('Steps', function($scope) { 
 
 
         brewParameters={

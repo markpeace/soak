@@ -1,3 +1,7 @@
+angular.element(document).ready(function() {
+  angular.bootstrap(document, ["brewbox"]);
+});
+
 var brewbox = angular.module('brewbox', ['ionic'])
 
 angular.forEach(['d'], function(name) {
