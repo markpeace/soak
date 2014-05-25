@@ -1,5 +1,4 @@
-brewbox.controller('Steps', function($scope) { 
-
+brewbox.controller('Steps', function($scope, HardwareInterface) { 
 
         brewParameters={
 
@@ -91,48 +90,64 @@ brewbox.controller('Steps', function($scope) {
                         me.HLT_waste_water = me.HLT_volume_after_second_addition - (me.MSH_second_water_volume + me.MSH_third_water_volume)                               
 
                 },
-                
+
                 steps: [],
-                
+
                 stepTemplate: function () {
                         
-                        this.currentValue = 12.23
+                        st=this
                         
-                        this.updateProgress = function () {
-                                this.percentageComplete = (this.currentValue / this.targetValue) * 100                                
-                                this.subtitle = this.currentValue + " / " + this.targetValue + this.targetValueUnit                                
+                        st.currentValue = 12.23
+
+                        st.updateProgress = function () {
+                                
+                                console.log("Ping")
+                                
+                                st.currentValue = HardwareInterface.hardwareReadings()[st.hardwareReference].readings[st.hardwareVariable]
+                                
+                                st.percentageComplete = (st.currentValue / st.targetValue) * 100                                
+                                st.subtitle = st.currentValue + " / " + st.targetValue + st.targetValueUnit
+                                
+                                if (st.percentageComplete>99) clearInterval(st.ping)                                                             
+                                
                         }
-                        
-                        
+
+
                         this.initialise = function () {
-                                this.updateProgress()                                                              
+                                
+                                HardwareInterface.requestQueue.push({ port: st.commandPort, command: st.command })
+                                
+                                st.ping = setInterval(st.updateProgress,HardwareInterface.settings.pulseInterval);                                                              
                         }
                 },
-                
+
                 createSteps: function () {
                         me = brewParameters;
-                        
+
                         angular.forEach([
                                 { 
-                                        title: "Prefill HLT", 
+                                        title: "Prefill HLT",
+                                        commandPort: 200,
+                                        command: "HLT SET VOL " + me.HLT_first_water_volume,
                                         targetValue: me.HLT_first_water_volume,
-                                        targetValueUnit: "l"
+                                        targetValueUnit: "l",
+                                        hardwareReference: "hlt",
+                                        hardwareVariable: "vol"
                                 }
                         ], function (s) {
                                 newStep = new me.stepTemplate
                                 angular.forEach(s, function(value,key) { newStep[key]=value })
-                                
-                               newStep.initialise();
-                                
+
+                                newStep.initialise();
+
                                 me.steps.push(newStep);        
                         })
-                        
-                        console.log(me)
+
                 }
 
         }
-        
-        
+
+
         brewParameters.calculate();
         brewParameters.createSteps();
 
