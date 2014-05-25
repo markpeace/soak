@@ -23,6 +23,18 @@ brewbox.config(function($stateProvider, $urlRouterProvider) {
                         }
                 }
         })
+        .state('ui.recipes', {
+                url: '/recipes/',
+                views: {
+                        'centre-panel': {
+                                templateUrl: 'pages/recipes.html',
+                                controller: 'Recipes'
+                        },
+                        'left-panel': {
+                                templateUrl: 'pages/menu.html'
+                        }
+                }
+        })
 
         $urlRouterProvider.otherwise("/ui/brewday/");
 
