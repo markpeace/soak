@@ -1,15 +1,13 @@
-brewbox.controller('Monitor', function($scope, HardwareInterface) { 
-
-        $scope.requestsMade = HardwareInterface.requestsMade;
+brewbox.controller('Monitor', function($scope) { 
 
         $scope.components=[{
-                title: 'Hot Liquor Tun',
-                hardwareReference: 'HLT',                             
+                title: 'Hot Liquor Tun',      
+                hardwareReference: 'hlt',
                 indicators: { 
-                        level: { colour: 'CornflowerBlue', capacity: 100 }
-                        temperature: { watchVariable: 'HardwareInterface.hardwareReadings.HLT.temp' }
+                        level: { colour: 'CornflowerBlue', capacity: 100 },
+                        temperature: { readingVariable: 'temp' }
                 }
-        },{
+        }/*,{
                 title: 'Mash Tun',
                 hardwareReference: 'MSH',
                 indicators: { 
@@ -21,6 +19,6 @@ brewbox.controller('Monitor', function($scope, HardwareInterface) {
                 indicators: { 
                         level: { colour: 'GoldenRod', capacity: 50 } 
                 }
-        }]   
-
+        }*/]   
+        
 });

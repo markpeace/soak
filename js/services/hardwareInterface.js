@@ -1,61 +1,61 @@
 brewbox.factory('HardwareInterface', function($http, $interval) {
-        
+
         var settings = {
                 activated: false,
-                pulseInterval: 5000,
+                pulseInterval: 2000,
                 requestsMade: 0,
                 server: 'http://telnetservice.herokuapp.com/bowerfold.dlinkddns.com'
         }
-        
-        var hardwareReadings= {}
-        
+
+        var hardwareReadings= {
+                hlt: {parameters:{}, readings: {}}
+        }
+
         var requestQueue = [{
                 port: 200,
+                command: "HLT PARAMETERS",
+                assignResponseTo: "hardwareReadings.hlt.parameters",
+                requeueAfterProcessing: false,
+        },{
+                port: 200,
                 command: "HLT PING",
-                assignResponseTo: "hardwareReadings",
+                assignResponseTo: "hardwareReadings.hlt.readings",
                 requeueAfterProcessing: true,
+        },{
+                port: 200,
+                command: "HLT SET VOL 100",
+                assignResponseTo: "temp",
+                requeueAfterProcessing: false,
+        },{
+                port: 200,
+                command: "HLT SET TEMP 0",
+                assignResponseTo: "temp",
+                requeueAfterProcessing: false,
         }]
-        
+
         processRequest = function () {
-                settings.requestsMade++;
+                settings.requestsMade++;        
+                
+                if (requestQueue.length==0) { return; }
+
+                var currentRequest = requestQueue[0];
+                requestQueue.splice(0,1)
+
+
+                $http({method: 'GET', url: settings.server+"/"+currentRequest.port+"/"+currentRequest.command })
+                .success(function(result) {                        
+                        eval(currentRequest.assignResponseTo + "=" + JSON.stringify(result))                        
+                        if (currentRequest.requeueAfterProcessing) requestQueue.push(currentRequest);
+                })          
+
         }
         if (!settings.activated) { settings.activated=true; $interval(processRequest, settings.pulseInterval)}        
-        
+
         return {
                 settings: settings,
                 requestQueue: requestQueue,
-                hardwareReadings: hardwareReadings
+                hardwareReadings: function() { return hardwareReadings }
         }
-        
-        
-        
-        /*
-        
-        
-        var data = { pulseInterval: 5000, active: false, requests: 0, server:"http://telnetservice.herokuapp.com/bowerfold.dlinkddns.com/200/HLT PING"};
-                
-        var pollhardware = function() {
-                
-                data.active=true
 
-                $http({method: 'GET', url: data.server })
-                .success(function(result, status, headers, config) {
-                        data.latestData = result;
-                        data.requests++;                       
-                        
-                        $interval(pollhardware, data.pulseInterval)
 
-                        console.log(result)
-                })                 
-                
-
-        }
-        
-        console.log("included");
-        if (!data.active) { pollhardware(); console.log("activate!"); };
-
-        return {
-                data: data
-        };*/
-        
 });
