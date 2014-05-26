@@ -1,11 +1,12 @@
-brewbox.controller('Recipes', function($scope, $http, ParseService) { 
+brewbox.controller('Recipes', function($scope, $http, ParseService, $ionicSideMenuDelegate, $stateParams) { 
 
         new Parse.Query(Parse.Object.extend("Recipe"))
         .find().then(function(result) {
                 $scope.recipes = result
                 $scope.$apply()
         })
-               
+        
+        if ($stateParams.recipe_id) { $scope.selectedID=$stateParams.recipe_id; $ionicSideMenuDelegate.toggleRight(); }       
 
 
 

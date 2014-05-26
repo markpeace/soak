@@ -5,5 +5,5 @@ brewbox.controller('MainUI', function($scope, ParseService, $ionicSideMenuDelega
         $scope.showRight = function() {
                 $ionicSideMenuDelegate.toggleRight();
         };
-
+        
 });

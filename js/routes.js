@@ -24,7 +24,7 @@ brewbox.config(function($stateProvider, $urlRouterProvider) {
                 }
         })
         .state('ui.recipes', {
-                url: '/recipes/',
+                url: '/recipes/:recipe_id',
                 views: {
                         'centre-panel': {
                                 templateUrl: 'pages/recipes.html',
@@ -32,6 +32,9 @@ brewbox.config(function($stateProvider, $urlRouterProvider) {
                         },
                         'left-panel': {
                                 templateUrl: 'pages/menu.html'
+                        },'right-panel': {
+                                templateUrl: 'pages/recipe_profile.html',
+                                controller: 'RecipeProfile'
                         }
                 }
         })
