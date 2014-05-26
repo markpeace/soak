@@ -100,9 +100,7 @@ brewbox.controller('Steps', function($scope, HardwareInterface) {
                         st.currentValue = 12.23
 
                         st.updateProgress = function () {
-                                
-                                console.log("Ping")
-                                
+                                                                
                                 st.currentValue = HardwareInterface.hardwareReadings()[st.hardwareReference].readings[st.hardwareVariable]
                                 
                                 st.percentageComplete = (st.currentValue / st.targetValue) * 100                                
