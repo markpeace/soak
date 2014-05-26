@@ -1,13 +1,11 @@
-brewbox.controller('Recipes', function($scope, $http) { 
-        console.log("recipes");        
+brewbox.controller('Recipes', function($scope, $http, ParseService) { 
 
-    	$scope.recipes = [
-            { id: 1, name: 'Plekk', style: 'Imperial IPA'  },
-            { id: 1, name: 'Nimbus Imperius', style: 'Russian Imperial Stout'  },
-            { id: 1, name: 'Stratus', style: 'Pale Ale'  },
-            { id: 1, name: 'Arcus', style: 'Vienna Lager'  },
-            { id: 1, name: 'Lenticular', style: 'India Pale Ale'  }
-        ]
+        new Parse.Query(Parse.Object.extend("Recipe"))
+        .find().then(function(result) {
+                $scope.recipes = result
+                $scope.$apply()
+        })
+               
 
 
 
