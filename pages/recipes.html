@@ -1,1 +1,6 @@
-Hallo
+<ion-list>
+  <ion-item ng-repeat="recipe in recipes" ui-sref="ui.recipes" href="#">
+      <h2>{{ recipe.name }}</h2>
+      <p>{{ recipe.style }}</p>
+    </ion-item>
+</ion-list>
