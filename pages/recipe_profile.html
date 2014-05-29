@@ -1,2 +1,20 @@
-<h1>{{ recipe.get('name') }}</h1>
-<h2>{{ recipe.get('style') }}</h2>
+<div class="ion-view">
+        <ul class="list">
+                <a ui-sref="ui.brewday" class="item">
+                        <h2><b>{{ recipe.get('name') }}</b></h2>
+                        <h2>{{ recipe.get('style') }}</h2>
+                </a>
+                
+                <div class="item item-divider item-icon-right">
+                        Brew Days
+                        <i class="icon ion-ios7-telephone-outline"></i>
+
+                </div>
+
+                <a class="item" href="#">
+                        29th February
+                </a>
+
+        </ul>
+
+</div>   
