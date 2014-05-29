@@ -1,6 +1,7 @@
-	brewbox.controller('Recipes', function($scope, $http, ParseService, $ionicSideMenuDelegate, $stateParams, $ionicLoading) { 
+brewbox.controller('Recipes', function($scope, $http, ParseService, $ionicSideMenuDelegate, $stateParams, $ionicLoading) { 
 
         new Parse.Query(Parse.Object.extend("Recipe"))
+        .ascending("name")
         .find().then(function(result) {
                 $scope.recipes = result
                 $scope.$apply()
@@ -37,7 +38,7 @@
                         btrecipeCount=result.substring(0, result.indexOf(" Recipes</strong></li>"))
                         btrecipeCount=btrecipeCount.substring(btrecipeCount.lastIndexOf(">")+1)
                         btrecipeCount=parseInt(btrecipeCount)
-                                                
+
                         result = result.substring(result.indexOf('<div class="recipe">'))
                         result = result.substring(0,result.indexOf('</ol>'))
 
@@ -55,15 +56,14 @@
                                 style=style.substring(0, style.indexOf('</span>'))                                
 
                                 if (name!="") { 
-                                        newItem=
-                                                exists = false;
+                                        exists = false;
 
                                         angular.forEach(btrecipes, function (btrecipe) {
-                                                if (btrecipe.reference==reference) exists=true
-                                                        })
+                                                if (btrecipe.reference==reference) { exists=true }
+                                        })
 
-                                        if (!exists) btrecipes.push({reference: reference, name:name, style:style})                                                                                       
-                                                }
+                                        if (!exists) { btrecipes.push({reference: reference, name:name, style:style}) }                                                                                
+                                }
 
                         })
                 }
@@ -72,10 +72,13 @@
                         $ionicLoading.hide();
 
                         angular.forEach(btrecipes, function(btrecipe) {
+
+                                
+
                                 doesRecipeExist=false
                                 angular.forEach($scope.recipes, function(recipe) {
-                                        if(recipe.reference==btrecipe.reference) doesRecipeExist=true  
-                                                })
+                                        if(recipe.get('reference')==btrecipe.reference) { doesRecipeExist=true }
+                                })
                                 if (!doesRecipeExist) {
                                         (new (Parse.Object.extend("Recipe"))).save(btrecipe)
                                 }
@@ -84,7 +87,7 @@
                 }
 
                 getRecipes();
-               
+
         }
 
 });
