@@ -12,13 +12,13 @@ brewbox.config(function($stateProvider, $urlRouterProvider) {
                 url: '/brewday/',
                 views: {
                         'centre-panel': {
-                                templateUrl: 'pages/monitor.html',
+                                templateUrl: 'pages/brewday/monitor.html',
                                 controller: 'Monitor'
                         },
                         'left-panel': {
                                 templateUrl: 'pages/menu.html'
                         },'right-panel': {
-                                templateUrl: 'pages/steps.html',
+                                templateUrl: 'pages/brewday/steps.html',
                                 controller: 'Steps'
                         }
                 }
@@ -27,13 +27,13 @@ brewbox.config(function($stateProvider, $urlRouterProvider) {
                 url: '/recipes/:recipe_id',
                 views: {
                         'centre-panel': {
-                                templateUrl: 'pages/recipes.html',
-                                controller: 'Recipes'
+                                templateUrl: 'pages/recipes/list.html',
+                                controller: 'ListRecipes'
                         },
                         'left-panel': {
                                 templateUrl: 'pages/menu.html'
                         },'right-panel': {
-                                templateUrl: 'pages/recipe_profile.html',
+                                templateUrl: 'pages/recipes/profile.html',
                                 controller: 'RecipeProfile'
                         }
                 }

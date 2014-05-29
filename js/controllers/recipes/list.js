@@ -1,4 +1,4 @@
-brewbox.controller('Recipes', function($scope, $http, ParseService, $ionicSideMenuDelegate, $stateParams, $ionicLoading) { 
+brewbox.controller('ListRecipes', function($scope, $http, ParseService, $ionicSideMenuDelegate, $stateParams, $ionicLoading) { 
 
         retrieveRecipes = function() {
                 new Parse.Query(Parse.Object.extend("Recipe"))
