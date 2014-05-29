@@ -1,11 +1,14 @@
 brewbox.controller('Recipes', function($scope, $http, ParseService, $ionicSideMenuDelegate, $stateParams, $ionicLoading) { 
 
-        new Parse.Query(Parse.Object.extend("Recipe"))
-        .ascending("name")
-        .find().then(function(result) {
-                $scope.recipes = result
-                $scope.$apply()
-        })
+        retrieveRecipes = function() {
+                new Parse.Query(Parse.Object.extend("Recipe"))
+                .ascending("name")
+                .find().then(function(result) {
+                        $scope.recipes = result
+                        $scope.$apply()
+                })
+        };
+        retrieveRecipes()
 
         if ($stateParams.recipe_id) { $scope.selectedID=$stateParams.recipe_id; $ionicSideMenuDelegate.toggleRight(); }       
 
@@ -70,17 +73,20 @@ brewbox.controller('Recipes', function($scope, $http, ParseService, $ionicSideMe
 
                 processRecipes = function () {
                         $ionicLoading.hide();
-
-                        angular.forEach(btrecipes, function(btrecipe) {
-
-                                
+                        
+                        highestAdd=0
+                        
+                        angular.forEach(btrecipes, function(btrecipe,index) {
 
                                 doesRecipeExist=false
                                 angular.forEach($scope.recipes, function(recipe) {
                                         if(recipe.get('reference')==btrecipe.reference) { doesRecipeExist=true }
                                 })
-                                if (!doesRecipeExist) {
-                                        (new (Parse.Object.extend("Recipe"))).save(btrecipe)
+                                if (!doesRecipeExist) {  
+                                        highestAdd = btrecipe.reference;
+                                        (new (Parse.Object.extend("Recipe"))).save(btrecipe).then(function(result) {
+                                                if(result.get("reference")==highestAdd) { console.log("ping"); retrieveRecipes(); }
+                                        })                                     
                                 }
                         })
 
