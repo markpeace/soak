@@ -1,4 +1,4 @@
-brewbox.controller('RecipeProfile', function($scope, $stateParams) { 
+brewbox.controller('RecipeProfile', function($scope, $stateParams, $ionicModal) { 
 
         if ($stateParams.recipe_id) {
                 $scope.selectedID=$stateParams.recipe_id
@@ -8,5 +8,15 @@ brewbox.controller('RecipeProfile', function($scope, $stateParams) {
                         $scope.$apply()
                 })
         }
+
+
+        $ionicModal.fromTemplateUrl('pages/schedule/new.html', function($ionicModal) {
+                $scope.newBrewday = $ionicModal;
+        }, {
+                scope: $scope,
+                animation: 'slide-in-up'
+        });   
+        
+        
 
 });
