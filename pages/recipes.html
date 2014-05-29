@@ -4,4 +4,7 @@
                 <p>{{ recipe.get('style') }}</p>
                 <i class="icon ion-ios7-arrow-right" ng-show="selectedID==recipe.id"></i>
         </ion-item>
+        <ion-item ng-click="refreshRecipes()">
+                <h2>Click To Refresh Available Recipes</h2>
+        </ion-item>
 </ion-list>
