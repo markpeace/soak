@@ -10,8 +10,10 @@ brewbox.controller('ListRecipes', function($scope, $http, ParseService, $ionicSi
         };
         retrieveRecipes()
 
-        if ($stateParams.recipe_id) { $scope.selectedID=$stateParams.recipe_id; $ionicSideMenuDelegate.toggleRight(); }       
-
+        if ($stateParams.recipe_id) { 
+                $scope.selectedID=$stateParams.recipe_id; 
+                //$ionicSideMenuDelegate.toggleRight();                 <-- This was causing problems, probably an Ionic version bug
+        }         
 
         $scope.refreshRecipes = function () {
 
