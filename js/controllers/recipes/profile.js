@@ -19,5 +19,8 @@ brewbox.controller('RecipeProfile', function($scope, $stateParams, $ionicModal) 
         
         $scope.newBrewdayDate = moment(new Date()).add('days', 1).utc().hour(10).minute(00);     
 
+        $scope.saveBrewday = function () {
+                console.log("Save")
+        }
 
 });

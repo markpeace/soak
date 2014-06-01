@@ -4,6 +4,9 @@ angular.element(document).ready(function() {
 
 var brewbox = angular.module('brewbox', ['ionic'])
 
+angular.module('Controllers', ['Models']);
+angular.module('Models', ['wrapParse']); // At this point Parse is already integrated with Angular's lifecycle.
+
 angular.forEach(['d'], function(name) {
         var ngName = 'ng' + name[0].toUpperCase() + name.slice(1);
         brewbox.directive(ngName, function() {
