@@ -8,8 +8,23 @@ brewbox.config(function($stateProvider, $urlRouterProvider) {
                 controller:'MainUI',
                 templateUrl: 'pages/mainUI.html'
         })
+        .state('ui.splash', {
+                url: '/brewday',
+                views: {
+                        'centre-panel': {
+                                templateUrl: 'pages/brewday/splash.html',
+                                controller: 'Splash'
+                        },
+                        'left-panel': {
+                                templateUrl: 'pages/menu.html'
+                        },'right-panel': {
+                                templateUrl: 'pages/brewday/steps.html',
+                                controller: 'Steps'
+                        }
+                }
+        })
         .state('ui.brewday', {
-                url: '/brewday/',
+                url: '/brewday/:id',
                 views: {
                         'centre-panel': {
                                 templateUrl: 'pages/brewday/monitor.html',
@@ -22,7 +37,7 @@ brewbox.config(function($stateProvider, $urlRouterProvider) {
                                 controller: 'Steps'
                         }
                 }
-        })
+        })        
         .state('ui.recipes', {
                 url: '/recipes/:recipe_id',
                 views: {
@@ -39,6 +54,6 @@ brewbox.config(function($stateProvider, $urlRouterProvider) {
                 }
         })
 
-        $urlRouterProvider.otherwise("/ui/brewday/");
+        $urlRouterProvider.otherwise("/ui/brewday");
 
 })
