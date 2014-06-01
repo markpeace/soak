@@ -11,16 +11,8 @@
 
                 </div>
 
-                <a class="item" href="#">
-                        29th February, 2014 @ 10:00
-                </a>
-                
-                <a class="item" href="#">
-                        1st November, 2013 @ 11:00
-                </a>
-
-                <a class="item" href="#">
-                        13th July, 2013 @ 11:00
+                <a class="item" href="#" ng-repeat="brewday in brewdays">
+                        {{ moment(brewday.get('date')).utc().format("Do MMM YYYY @ hh:mma") }}
                 </a>
 
         </ul>
