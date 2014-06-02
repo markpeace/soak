@@ -1,7 +1,7 @@
 brewbox.controller('Splash', function($scope) { 
 
-        new Parse.Query(Parse.Object.extend("Recipe"))
-        .equalTo
+/*        new Parse.Query(Parse.Object.extend("Recipe"))
+        .equalTo("")
         
         var GameScore = Parse.Object.extend("GameScore");
         var query = new Parse.Query(GameScore);
@@ -19,5 +19,5 @@ brewbox.controller('Splash', function($scope) {
                         alert("Error: " + error.code + " " + error.message);
                 }
         });                
-
+*/
 });

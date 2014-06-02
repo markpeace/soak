@@ -17,10 +17,10 @@ brewbox.controller('ListRecipes', function($scope, $http, ParseService, $ionicSi
 
         $scope.refreshRecipes = function () {
 
-                $ionicLoading.show({
+                /*$ionicLoading.show({
                         template: 'Loading...'
-                });
-
+                });*/
+                
 
                 btrecipes = []
                 btrecipeCount=0
@@ -74,7 +74,7 @@ brewbox.controller('ListRecipes', function($scope, $http, ParseService, $ionicSi
                 }
 
                 processRecipes = function () {
-                        $ionicLoading.hide();
+                        //$ionicLoading.hide();
                         
                         highestAdd=0
                         
