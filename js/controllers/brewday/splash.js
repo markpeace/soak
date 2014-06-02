@@ -1,23 +1,18 @@
-brewbox.controller('Splash', function($scope) { 
+brewbox.controller('Splash', function($scope, $state) { 
 
-/*        new Parse.Query(Parse.Object.extend("Recipe"))
-        .equalTo("")
-        
-        var GameScore = Parse.Object.extend("GameScore");
-        var query = new Parse.Query(GameScore);
-        query.equalTo("playerName", "Dan Stemkoski");
-        query.find({
-                success: function(results) {
-                        alert("Successfully retrieved " + results.length + " scores.");
-                        // Do something with the returned Parse.Object values
-                        for (var i = 0; i < results.length; i++) { 
-                                var object = results[i];
-                                alert(object.id + ' - ' + object.get('playerName'));
-                        }
-                },
-                error: function(error) {
-                        alert("Error: " + error.code + " " + error.message);
+        dateSelect = new Parse.Query(Parse.Object.extend("Brewday"))
+        .greaterThan("date", moment().subtract("days",1).toDate())       
+        .lessThan("date", moment().add("days",2).toDate())
+
+        activeSelect = new Parse.Query("Brewday")        
+        .equalTo("active", "true")
+
+        new Parse.Query.or(dateSelect, activeSelect)        
+        .ascending("date")
+        .limit(1)
+        .find().then(function(result){
+                if (result.length>0) {
+                        console.log($state.go("ui.brewday", {id: result[0].id}))
                 }
-        });                
-*/
+        })       
 });
