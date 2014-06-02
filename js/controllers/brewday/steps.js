@@ -1,4 +1,22 @@
-brewbox.controller('Steps', function($scope, HardwareInterface) { 
+brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $state) { 
+
+
+        var getRecipe = function () {
+                new Parse.Query("Brewday")
+                .get($stateParams.id, {
+                        success:function(result) {
+                                $state.recipe=result
+                        },
+                        error: function() {
+                                $state.go("ui.splash")
+                        }
+                })
+
+        }
+        getRecipe();
+
+
+
 
         brewParameters={
 
@@ -94,27 +112,27 @@ brewbox.controller('Steps', function($scope, HardwareInterface) {
                 steps: [],
 
                 stepTemplate: function () {
-                        
+
                         st=this
-                        
+
                         st.currentValue = 12.23
 
                         st.updateProgress = function () {
-                                                                
+
                                 st.currentValue = HardwareInterface.hardwareReadings()[st.hardwareReference].readings[st.hardwareVariable]
-                                
+
                                 st.percentageComplete = (st.currentValue / st.targetValue) * 100                                
                                 st.subtitle = st.currentValue + " / " + st.targetValue + st.targetValueUnit
-                                
+
                                 if (st.percentageComplete>99) clearInterval(st.ping)                                                             
-                                
-                        }
+
+                                        }
 
 
                         this.initialise = function () {
-                                
+
                                 HardwareInterface.requestQueue.push({ port: st.commandPort, command: st.command })
-                                
+
                                 st.ping = setInterval(st.updateProgress,HardwareInterface.settings.pulseInterval);                                                              
                         }
                 },
