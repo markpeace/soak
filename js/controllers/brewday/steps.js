@@ -1,21 +1,25 @@
-brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $state) { 
+brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $state, RecipeScraper) { 
 
 
         var getRecipe = function () {
-                new Parse.Query("Brewday")
-                .get($stateParams.id, {
-                        success:function(result) {
-                                $state.recipe=result
-                        },
-                        error: function() {
-                                $state.go("ui.splash")
-                        }
+                (new Parse.Query("Brewday"))
+                .equalTo("objectId", $stateParams.id)
+                .include("recipe")          
+                .find().then(function(result) {
+                        if(result.length==0) {$state.go("ui.splash")}
+                        $state.brewday=result[0]
+                        if(!result[0].get("steps")) { calculateBrewSteps() }
                 })
 
         }
         getRecipe();
 
 
+        var calculateBrewSteps= function () {
+                RecipeScraper.updateRecipeXML($state.brewday.get("recipe"))
+        }
+
+ 
 
 
         brewParameters={
