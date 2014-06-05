@@ -1,11 +1,11 @@
 brewbox.factory('RecipeScraper', function($http) {
-      
+
         return {
                 updateRecipeXML: function (recipe) {
                         console.log("Updating Recipe XML")
                         $http({method: 'GET', url: "http://telnetservice.herokuapp.com/scrape/https/www.brewtoad.com/recipes/"+recipe.get('reference')+".xml" }).success(function(result) {                               
-                                result=decodeURIComponent(result.result.replace(/\+/g, ' '))                    
-                                
+                                result=decodeURIComponent(result.result.replace(/\+/g, ' ')).toLowerCase().replace("yeast", "yeasts")             
+
                                 var r = {
                                         ingredients:{
                                                 total_fermentables:0,
@@ -13,24 +13,37 @@ brewbox.factory('RecipeScraper', function($http) {
                                                 total_hops: 0,
                                                 hops:[]
                                         }
-                                }
+                                }                                
                                 
-                                fermentables=result.substr(result.indexOf("<FERMENTABLE>")+13)                                
-                                fermentables=fermentables.substr(0,fermentables.indexOf("</FERMENTABLES>"))
-                                fermentables=fermentables.split("<FERMENTABLE>")
-                                
-                                angular.forEach(fermentables, function(fermentable) {
-                                        name=fermentable.substr(fermentable.indexOf("<NAME>")+6)
-                                        name=name.substr(0,name.indexOf("</NAME>"))
+                                angular.forEach(['fermentable','hop', 'yeast'],function(ingredientType) {
                                         
-                                        amount=fermentable.substr(fermentable.indexOf("<AMOUNT>")+8)
-                                        amount=parseFloat(amount.substr(0,amount.indexOf("</AMOUNT>")))
+                                        r.ingredients[ingredientType+"s"]=[]
+                                        r.ingredients["total_"+ingredientType+"s"]=0                                                                                
                                         
-                                        r.ingredients.fermentables.push({name: name, amount: amount})
-                                        r.ingredients.total_fermentables=r.ingredients.total_fermentables+amount
+                                        ingredients=result.substr(result.indexOf("<" + ingredientType + ">")+13)                                
+                                        ingredients=ingredients.substr(0,ingredients.indexOf("</" + ingredientType + "s>"))
+                                        ingredients=ingredients.split("<"+ingredientType+">")
 
-                                })
-                                                                
+                                        angular.forEach(ingredients, function(ingredient) {
+                                                                                                
+                                                name=ingredient.substr(ingredient.indexOf("<name>")+6)
+                                                name=name.substr(0,name.indexOf("</name>"))
+
+                                                amount=ingredient.substr(ingredient.indexOf("<amount>")+8)
+                                                amount=parseFloat(amount.substr(0,amount.indexOf("</amount>")))
+
+                                                if (isNaN(amount)) { amount = 1}
+                                                
+                                                r.ingredients[ingredientType+"s"].push({name: name, amount: amount})
+                                                r.ingredients['total_'+ingredientType+"s"]=r.ingredients['total_'+ingredientType+"s"]+amount
+
+                                                
+                                        })        
+                                })                               
+
+                                recipe.set("xml", r)
+                                recipe.save();
+
                         })
                 }
         }
