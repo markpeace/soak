@@ -21,14 +21,6 @@ brewbox.factory('HardwareInterface', function($http, $interval) {
                 command: "HLT PING",
                 assignResponseTo: "hardwareReadings.hlt.readings",
                 requeueAfterProcessing: true,
-        },{
-                port: 200,
-                command: "HLT SET VOL 0",
-                requeueAfterProcessing: false,
-        },{
-                port: 200,
-                command: "HLT SET TEMP 0",
-                requeueAfterProcessing: false,
         }]
 
         processRequest = function () {

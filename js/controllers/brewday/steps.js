@@ -1,6 +1,9 @@
 brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $state, RecipeScraper, $ionicListDelegate) { 
 
 
+        //HardwareInterface.requestQueue.push({ port: 200, command: "HLT SET VOL 0" })
+        //HardwareInterface.requestQueue.push({ port: 200, command: "HLT SET TEMP 0" })
+
         var getRecipe = function () {
                 (new Parse.Query("Brewday"))
                 .equalTo("objectId", $stateParams.id)
