@@ -154,7 +154,7 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                                 if (v==st) { stepIndex=i }
                         })
 
-                        if ($scope.brewSteps.length>stepIndex) {
+                        if ($scope.brewSteps.length-1>stepIndex) {
                                 $scope.brewSteps[stepIndex+1].isCurrent=true
                         }
 
