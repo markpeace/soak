@@ -1,8 +1,8 @@
 brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $state, RecipeScraper, $ionicListDelegate) { 
 
 
-        //HardwareInterface.requestQueue.push({ port: 200, command: "HLT SET VOL 0" })
-        //HardwareInterface.requestQueue.push({ port: 200, command: "HLT SET TEMP 0" })
+        HardwareInterface.requestQueue.push({ port: 200, command: "HLT SET VOL 35" })
+        HardwareInterface.requestQueue.push({ port: 200, command: "HLT SET TEMP 74" })
 
         var getRecipe = function () {
                 (new Parse.Query("Brewday"))
@@ -12,7 +12,7 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                         if(result.length==0) {$state.go("ui.splash")}
                         $scope.brewday=result[0]
                         if(result[0].get("steps")) { resumeBrewday(); } else { compileBrewParameters(); }
-                        //compileBrewParameters();
+                        compileBrewParameters();
                 })
 
         }
@@ -126,8 +126,12 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
         $scope.stepFunctions = {
                 sf: this,
                 activate: function (st) {
+                        
+                        st.originalValue = HardwareInterface.hardwareReadings()[st.hardwareReference].readings[st.hardwareVariable]
+                        if (st.targetValue<st.originalValue) { st.reverse = true }
+                        
                         st.isActive=true;
-                        HardwareInterface.requestQueue.push({ port: st.commandPort, command: st.command })
+                        HardwareInterface.requestQueue.push({ port: st.commandPort, command: st.command + st.targetValue })
                         st.ping = setInterval(function() {$scope.stepFunctions.updateProgress(st)},HardwareInterface.settings.pulseInterval);   
                         $ionicListDelegate.closeOptionButtons()
 
@@ -139,8 +143,18 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
 
                         st.currentValue = HardwareInterface.hardwareReadings()[st.hardwareReference].readings[st.hardwareVariable]
 
-                        st.percentageComplete = (st.currentValue / st.targetValue) * 100                                
+                        st.percentageComplete = (st.currentValue / st.targetValue) * 100       
                         st.subtitle = Math.round(st.currentValue,1) + " / " + Math.round(st.targetValue,1) + st.targetValueUnit
+                        
+                        if (st.reverse==true) { 
+                                
+                                st.subtitle = Math.round(st.originalValue - st.currentValue,1) + "/" + Math.round(st.originalValue - st.targetValue,1)
+                                
+                                st.percentageComplete = ((st.originalValue - st.currentValue)/(st.originalValue - st.targetValue))*100             
+                                
+                        }
+                        
+                       
 
                         if (st.percentageComplete>95) { $scope.stepFunctions.deactivate(st) }                                                           
 
@@ -191,7 +205,7 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                         { 
                                 title: "Prefill HLT",
                                 isCurrent: true,
-                                command: "HLT SET VOL " + me.HLT_first_water_volume,
+                                command: "HLT SET VOL ",
                                 targetValue: me.HLT_first_water_volume,
                                 targetValueUnit: "l",
                                 hardwareReference: "hlt",
@@ -199,7 +213,7 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                         },
                         { 
                                 title: "Preheat HLT",
-                                command: "HLT SET TEMP " + me.MSH_first_water_temperature,
+                                command: "HLT SET TEMP ",
                                 targetValue: me.MSH_first_water_temperature,
                                 targetValueUnit: "&deg;C",
                                 hardwareReference: "hlt",
@@ -207,8 +221,8 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                         },
                         { 
                                 title: "Transfer Strike Water",
-                                command: "HLT SET VOL " + (me.HLT_first_water_volume+me.MSH_first_water_volume),
-                                targetValue: me.HLT_first_water_volume+me.MSH_first_water_volume,
+                                command: "HLT SET VOL ",
+                                targetValue: me.HLT_first_water_volume-me.MSH_first_water_volume,
                                 targetValueUnit: "l",
                                 hardwareReference: "hlt",
                                 hardwareVariable: "vol"
