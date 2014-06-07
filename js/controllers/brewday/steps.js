@@ -127,17 +127,21 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                 sf: this,
                 activate: function (st) {
 
+                        $ionicListDelegate.closeOptionButtons()
+
                         st.originalValue = HardwareInterface.hardwareReadings()[st.hardwareReference].readings[st.hardwareVariable]
                         if (st.targetValue<st.originalValue) { st.reverse = true }
 
                         st.isActive=true;
                         HardwareInterface.requestQueue.push({ port: st.commandPort, command: st.command + st.targetValue })
-                        st.ping = setInterval(function() {$scope.stepFunctions.updateProgress(st)},HardwareInterface.settings.pulseInterval);   
-                        $ionicListDelegate.closeOptionButtons()
 
-                        console.log(st.command)
-
-                        $scope.brewday.set("steps", $scope.brewSteps).save()
+                        if (!st.continueWithoutCompletion) {
+                                st.ping = setInterval(function() {$scope.stepFunctions.updateProgress(st)},HardwareInterface.settings.pulseInterval);   
+                                $scope.brewday.set("steps", $scope.brewSteps).save()
+                        } else {
+                                st.percentageComplete = 100
+                                $scope.stepFunctions.deactivate(st)                                
+                        }
                 },
                 updateProgress:function (st) {
 
@@ -236,15 +240,6 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                                 hardwareVariable: "vol"
                         },
                         { 
-                                title: "Top Up HLT",
-                                trigger: "auto",
-                                command: "HLT SET VOL ",
-                                targetValue: me.HLT_second_water_volume + (me.HLT_first_water_volume-me.MSH_first_water_volume),
-                                targetValueUnit: "l",
-                                hardwareReference: "hlt",
-                                hardwareVariable: "vol"
-                        },
-                        { 
                                 title: "Set HLT to Mash Temperature",
                                 trigger:"auto",
                                 continueWithoutCompletion:true,
@@ -253,6 +248,15 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                                 targetValueUnit: "&deg;C",
                                 hardwareReference: "hlt",
                                 hardwareVariable: "temp"
+                        },
+                        { 
+                                title: "Top Up HLT",
+                                trigger: "auto",
+                                command: "HLT SET VOL ",
+                                targetValue: me.HLT_second_water_volume + (me.HLT_first_water_volume-me.MSH_first_water_volume),
+                                targetValueUnit: "l",
+                                hardwareReference: "hlt",
+                                hardwareVariable: "vol"
                         }
                 ], function (step) {
                         newStep = new stepTemplate
