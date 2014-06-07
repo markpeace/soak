@@ -11,7 +11,7 @@
                         <p ng-show="step.trigger=='user' && step.isCurrent && !step.isActive">Swipe To Activate</p>
                         <p ng-bind-html="step.subtitle" ng-show="step.isActive"></p>
                         
-                        <ion-option-button class="button-balanced" ng-click="step.activate(step)" ng-show="step.isCurrent && !step.isActive">
+                        <ion-option-button class="button-balanced" ng-click="stepFunctions.activate(step)" ng-show="step.isCurrent && !step.isActive">
                                 GO!
                         </ion-option-button>
 

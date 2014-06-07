@@ -7,9 +7,9 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                 .include("recipe")          
                 .find().then(function(result) {
                         if(result.length==0) {$state.go("ui.splash")}
-                        $state.brewday=result[0]
+                        $scope.brewday=result[0]
                         if(result[0].get("steps")) { resumeBrewday(); } else { compileBrewParameters(); }
-                        compileBrewParameters();
+                        //compileBrewParameters();
                 })
 
         }
@@ -17,10 +17,10 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
 
 
         var compileBrewParameters = function () {
-                RecipeScraper.updateRecipeXML($state.brewday.get("recipe"))
+                RecipeScraper.updateRecipeXML($scope.brewday.get("recipe"))
 
-                $scope.$watch('$state.brewday.get("recipe").get("xml")', function(val){
-                        recipeParameters = $state.brewday.get("recipe").get("xml")
+                $scope.$watch('$scope.brewday.get("recipe").get("xml")', function(val){
+                        recipeParameters = $scope.brewday.get("recipe").get("xml")
 
                         brewParameters={
 
@@ -120,6 +120,48 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
 
         }
 
+        $scope.stepFunctions = {
+                sf: this,
+                activate: function (st) {
+                        st.isActive=true;
+                        HardwareInterface.requestQueue.push({ port: st.commandPort, command: st.command })
+                        st.ping = setInterval(function() {$scope.stepFunctions.updateProgress(st)},HardwareInterface.settings.pulseInterval);   
+                        $ionicListDelegate.closeOptionButtons()
+
+                        $scope.brewday.set("steps", $scope.brewSteps).save()
+                },
+                updateProgress:function (st) {
+
+                        st.currentValue = HardwareInterface.hardwareReadings()[st.hardwareReference].readings[st.hardwareVariable]
+
+                        st.percentageComplete = (st.currentValue / st.targetValue) * 100                                
+                        st.subtitle = Math.round(st.currentValue,1) + " / " + Math.round(st.targetValue,1) + st.targetValueUnit
+
+                        if (st.percentageComplete>98) { $scope.stepFunctions.deactivate(st) }                                                           
+
+                },
+                deactivate: function (st) {
+                        clearInterval(st.ping)                         
+
+                        stepIndex=-1;
+
+                        angular.forEach($scope.brewSteps, function(v,i) {  
+                                if (v==st) { stepIndex=i }
+                        })
+
+                        if ($scope.brewSteps.length>stepIndex) {
+                                $scope.brewSteps[stepIndex+1].isCurrent=true
+                        }
+
+                        st.isActive=false
+                        st.isCurrent=false
+
+                        $scope.brewday.set("steps", $scope.brewSteps).save()
+
+                }
+        }
+
+
         calculateBrewSteps = function (brewParameters) {
                 steps=[]
 
@@ -133,43 +175,7 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
 
                         st.commandPort= 200
 
-                        st.currentValue = 12.23
-
-                        st.updateProgress = function (st) {
-
-                                st.currentValue = HardwareInterface.hardwareReadings()[st.hardwareReference].readings[st.hardwareVariable]
-
-                                st.percentageComplete = (st.currentValue / st.targetValue) * 100                                
-                                st.subtitle = Math.round(st.currentValue,1) + " / " + Math.round(st.targetValue,1) + st.targetValueUnit
-
-                                if (st.percentageComplete>98) { st.deactivate(st) }                                                           
-
-                        }
-
-                        this.activate = function (st) {
-                                st.isActive=true;
-                                HardwareInterface.requestQueue.push({ port: st.commandPort, command: st.command })
-                                st.ping = setInterval(function() {st.updateProgress(st)},HardwareInterface.settings.pulseInterval);   
-                                $ionicListDelegate.closeOptionButtons()
-                        }
-
-                        this.deactivate = function (st) {
-                                clearInterval(st.ping)                         
-
-                                stepIndex=-1;
-
-                                angular.forEach($scope.brewSteps, function(v,i) {  
-                                        if (v==st) { stepIndex=i }
-                                })
-
-                                if ($scope.brewSteps.length>stepIndex) {
-                                        $scope.brewSteps[stepIndex+1].isCurrent=true
-                                }
-
-                                st.isActive=false
-                                st.isCurrent=false
-
-                        }
+                        st.currentValue = 12.23                        
 
                 }
 
@@ -201,14 +207,14 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                 })
 
 
-                $state.brewday.set("steps", steps).save().then(resumeBrewday)
+                $scope.brewday.set("steps", steps).save().then(resumeBrewday)
 
         }
 
 
         resumeBrewday=function () {
-                $scope.brewSteps=$state.brewday.get('steps')                   
+                $scope.brewSteps=$scope.brewday.get('steps')   
                 console.log("resumed")
-        }
+        }        
 
 });
