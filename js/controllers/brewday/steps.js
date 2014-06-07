@@ -131,6 +131,8 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                         st.ping = setInterval(function() {$scope.stepFunctions.updateProgress(st)},HardwareInterface.settings.pulseInterval);   
                         $ionicListDelegate.closeOptionButtons()
 
+                        console.log(st.command)
+                        
                         $scope.brewday.set("steps", $scope.brewSteps).save()
                 },
                 updateProgress:function (st) {
@@ -140,7 +142,7 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                         st.percentageComplete = (st.currentValue / st.targetValue) * 100                                
                         st.subtitle = Math.round(st.currentValue,1) + " / " + Math.round(st.targetValue,1) + st.targetValueUnit
 
-                        if (st.percentageComplete>98) { $scope.stepFunctions.deactivate(st) }                                                           
+                        if (st.percentageComplete>95) { $scope.stepFunctions.deactivate(st) }                                                           
 
                 },
                 deactivate: function (st) {
@@ -202,14 +204,21 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                                 targetValueUnit: "&deg;C",
                                 hardwareReference: "hlt",
                                 hardwareVariable: "temp"
+                        },
+                        { 
+                                title: "Transfer Strike Water",
+                                command: "HLT SET VOL " + (me.HLT_first_water_volume+me.MSH_first_water_volume),
+                                targetValue: me.HLT_first_water_volume+me.MSH_first_water_volume,
+                                targetValueUnit: "l",
+                                hardwareReference: "hlt",
+                                hardwareVariable: "vol"
                         }
                 ], function (step) {
                         newStep = new stepTemplate
                         angular.forEach(step, function(value,key) { newStep[key]=value })
                         steps.push(newStep);        
                 })
-
-
+                
                 $scope.brewday.set("steps", steps).save().then(resumeBrewday)
 
         }
@@ -217,6 +226,11 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
 
         resumeBrewday=function () {
                 $scope.brewSteps=$scope.brewday.get('steps')   
+                
+                angular.forEach($scope.brewSteps, function (step) {
+                        if (step.isActive) { $scope.stepFunctions.activate(step) }
+                })
+                
                 console.log("resumed")
         }        
 
