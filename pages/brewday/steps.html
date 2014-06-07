@@ -2,23 +2,18 @@
 
 
         <ion-list>
-                <ion-item class="item item-icon-right"                           
+                <ion-item class="item"                           
                           ng-repeat="step in brewSteps" 
                           item="step" 
-                          can-swipe="currentStep == $index">
-
-
+                          can-swipe="step.isCurrent">
+                        
                         <h3 ng-bind-html="step.title"></h3>
-                        <p>Swipe To Activate</p>
+                        <p ng-show="step.trigger=='user' && step.isCurrent && !step.isActive">Swipe To Activate</p>
                         <p ng-bind-html="step.subtitle" ng-show="step.isActive"></p>
-                        <ion-option-button class="button-assertive" ng-click="edit(brew)">
-                                DONE
+                        
+                        <ion-option-button class="button-balanced" ng-click="step.activate()" ng-hide="step.isActive">
+                                GO!
                         </ion-option-button>
-
-                        <i class="icon ion-ios7-checkmark-empty" ng-show="currentStep>$index"></i>
-                        <i class="icon ion-ios7-arrow-thin-left" ng-show="currentStep == $index"></i>
-                        <i class="icon ion-ios7-locked-outline" ng-show="currentStep<$index"></i>
-
 
                         <div style="background-color:green; position:absolute; top:0px;bottom:0px; left: 0px; width: {{ step.percentageComplete }}%; opacity: 0.2;"></div>
 

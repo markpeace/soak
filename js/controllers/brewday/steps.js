@@ -1,4 +1,4 @@
-brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $state, RecipeScraper) { 
+brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $state, RecipeScraper, $ionicListDelegate) { 
 
 
         var getRecipe = function () {
@@ -126,8 +126,12 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                 stepTemplate =function () {
 
                         st=this
-                        
+
+                        st.isCurrent=false;
                         st.isActive=false;
+                        st.trigger = "user"
+
+                        st.commandPort= 200
 
                         st.currentValue = 12.23
 
@@ -138,17 +142,22 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                                 st.percentageComplete = (st.currentValue / st.targetValue) * 100                                
                                 st.subtitle = st.currentValue + " / " + st.targetValue + st.targetValueUnit
 
-                                if (st.percentageComplete>99) clearInterval(st.ping)                                                             
+                                if (st.percentageComplete>98) { st.deactivate() }                                                           
 
-                                        }
-
-
-                        this.initialise = function () {
-
-                                HardwareInterface.requestQueue.push({ port: st.commandPort, command: st.command })
-
-                                st.ping = setInterval(st.updateProgress,HardwareInterface.settings.pulseInterval);                                                              
                         }
+
+                        this.activate = function () {
+                                this.isActive=true;
+                                HardwareInterface.requestQueue.push({ port: st.commandPort, command: st.command })
+                                st.ping = setInterval(st.updateProgress,HardwareInterface.settings.pulseInterval);   
+                                $ionicListDelegate.closeOptionButtons()
+                        }
+
+                        this.deactivate = function () {
+                                clearInterval(st.ping)
+                                console.log("deeactivate")
+                        }
+
                 }
 
 
@@ -157,13 +166,20 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                 angular.forEach([
                         { 
                                 title: "Prefill HLT",
-                                trigger: "user",
-                                commandPort: 200,
+                                isCurrent: true,
                                 command: "HLT SET VOL " + me.HLT_first_water_volume,
                                 targetValue: me.HLT_first_water_volume,
                                 targetValueUnit: "l",
                                 hardwareReference: "hlt",
                                 hardwareVariable: "vol"
+                        },
+                        { 
+                                title: "Preheat HLT",
+                                command: "HLT SET TEMP " + me.MSH_first_water_temperature,
+                                targetValue: me.MSH_first_water_temperature,
+                                targetValueUnit: "&deg;C",
+                                hardwareReference: "hlt",
+                                hardwareVariable: "temp"
                         }
                 ], function (step) {
                         newStep = new stepTemplate
