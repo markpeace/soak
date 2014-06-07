@@ -6,12 +6,12 @@
                           ng-repeat="step in brewSteps" 
                           item="step" 
                           can-swipe="step.isCurrent">
-                        
+                                                
                         <h3 ng-bind-html="step.title"></h3>
                         <p ng-show="step.trigger=='user' && step.isCurrent && !step.isActive">Swipe To Activate</p>
                         <p ng-bind-html="step.subtitle" ng-show="step.isActive"></p>
                         
-                        <ion-option-button class="button-balanced" ng-click="step.activate()" ng-hide="step.isActive">
+                        <ion-option-button class="button-balanced" ng-click="step.activate(step)" ng-show="step.isCurrent && !step.isActive">
                                 GO!
                         </ion-option-button>
 

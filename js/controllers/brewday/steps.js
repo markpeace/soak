@@ -135,27 +135,40 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
 
                         st.currentValue = 12.23
 
-                        st.updateProgress = function () {
+                        st.updateProgress = function (st) {
 
                                 st.currentValue = HardwareInterface.hardwareReadings()[st.hardwareReference].readings[st.hardwareVariable]
 
                                 st.percentageComplete = (st.currentValue / st.targetValue) * 100                                
-                                st.subtitle = st.currentValue + " / " + st.targetValue + st.targetValueUnit
+                                st.subtitle = Math.round(st.currentValue,1) + " / " + Math.round(st.targetValue,1) + st.targetValueUnit
 
-                                if (st.percentageComplete>98) { st.deactivate() }                                                           
+                                if (st.percentageComplete>98) { st.deactivate(st) }                                                           
 
                         }
 
-                        this.activate = function () {
-                                this.isActive=true;
+                        this.activate = function (st) {
+                                st.isActive=true;
                                 HardwareInterface.requestQueue.push({ port: st.commandPort, command: st.command })
-                                st.ping = setInterval(st.updateProgress,HardwareInterface.settings.pulseInterval);   
+                                st.ping = setInterval(function() {st.updateProgress(st)},HardwareInterface.settings.pulseInterval);   
                                 $ionicListDelegate.closeOptionButtons()
                         }
 
-                        this.deactivate = function () {
-                                clearInterval(st.ping)
-                                console.log("deeactivate")
+                        this.deactivate = function (st) {
+                                clearInterval(st.ping)                         
+
+                                stepIndex=-1;
+
+                                angular.forEach($scope.brewSteps, function(v,i) {  
+                                        if (v==st) { stepIndex=i }
+                                })
+
+                                if ($scope.brewSteps.length>stepIndex) {
+                                        $scope.brewSteps[stepIndex+1].isCurrent=true
+                                }
+
+                                st.isActive=false
+                                st.isCurrent=false
+
                         }
 
                 }
