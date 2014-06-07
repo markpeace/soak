@@ -126,17 +126,17 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
         $scope.stepFunctions = {
                 sf: this,
                 activate: function (st) {
-                        
+
                         st.originalValue = HardwareInterface.hardwareReadings()[st.hardwareReference].readings[st.hardwareVariable]
                         if (st.targetValue<st.originalValue) { st.reverse = true }
-                        
+
                         st.isActive=true;
                         HardwareInterface.requestQueue.push({ port: st.commandPort, command: st.command + st.targetValue })
                         st.ping = setInterval(function() {$scope.stepFunctions.updateProgress(st)},HardwareInterface.settings.pulseInterval);   
                         $ionicListDelegate.closeOptionButtons()
 
                         console.log(st.command)
-                        
+
                         $scope.brewday.set("steps", $scope.brewSteps).save()
                 },
                 updateProgress:function (st) {
@@ -145,16 +145,16 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
 
                         st.percentageComplete = (st.currentValue / st.targetValue) * 100       
                         st.subtitle = Math.round(st.currentValue,1) + " / " + Math.round(st.targetValue,1) + st.targetValueUnit
-                        
+
                         if (st.reverse==true) { 
-                                
+
                                 st.subtitle = Math.round(st.originalValue - st.currentValue,1) + "/" + Math.round(st.originalValue - st.targetValue,1)
-                                
+
                                 st.percentageComplete = ((st.originalValue - st.currentValue)/(st.originalValue - st.targetValue))*100             
-                                
+
                         }
-                        
-                       
+
+
 
                         if (st.percentageComplete>95) { $scope.stepFunctions.deactivate(st) }                                                           
 
@@ -170,6 +170,13 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
 
                         if ($scope.brewSteps.length-1>stepIndex) {
                                 $scope.brewSteps[stepIndex+1].isCurrent=true
+
+                                switch($scope.brewSteps[stepIndex+1].trigger) {
+                                        case "auto":
+                                                $scope.stepFunctions.activate($scope.brewSteps[stepIndex+1])
+                                                break;
+                                }
+
                         }
 
                         st.isActive=false
@@ -191,6 +198,7 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                         st.isCurrent=false;
                         st.isActive=false;
                         st.trigger = "user"
+                        st.continueWithoutCompletion = false
 
                         st.commandPort= 200
 
@@ -226,13 +234,32 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                                 targetValueUnit: "l",
                                 hardwareReference: "hlt",
                                 hardwareVariable: "vol"
+                        },
+                        { 
+                                title: "Top Up HLT",
+                                trigger: "auto",
+                                command: "HLT SET VOL ",
+                                targetValue: me.HLT_second_water_volume + (me.HLT_first_water_volume-me.MSH_first_water_volume),
+                                targetValueUnit: "l",
+                                hardwareReference: "hlt",
+                                hardwareVariable: "vol"
+                        },
+                        { 
+                                title: "Set HLT to Mash Temperature",
+                                trigger:"auto",
+                                continueWithoutCompletion:true,
+                                command: "HLT SET TEMP ",
+                                targetValue: me.MSH_temperature,
+                                targetValueUnit: "&deg;C",
+                                hardwareReference: "hlt",
+                                hardwareVariable: "temp"
                         }
                 ], function (step) {
                         newStep = new stepTemplate
                         angular.forEach(step, function(value,key) { newStep[key]=value })
                         steps.push(newStep);        
                 })
-                
+
                 $scope.brewday.set("steps", steps).save().then(resumeBrewday)
 
         }
@@ -240,11 +267,11 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
 
         resumeBrewday=function () {
                 $scope.brewSteps=$scope.brewday.get('steps')   
-                
+
                 angular.forEach($scope.brewSteps, function (step) {
                         if (step.isActive) { $scope.stepFunctions.activate(step) }
                 })
-                
+
                 console.log("resumed")
         }        
 
