@@ -6,27 +6,31 @@
         id        = "com.markpeace.brewbox"
         version   = "1.0.0">
 
-    <name>BrewBox</name>
+        <name>BrewBox</name>
 
-    <description>
-      BrewBox
-    </description>
+        <description>
+                BrewBox
+        </description>
 
-    <author href="http://www.mmu.ac.uk/ioe" email="m.peace@mmu.ac.uk">
-        Mark Peace
-    </author>
+        <author href="http://www.mmu.ac.uk/ioe" email="m.peace@mmu.ac.uk">
+                Mark Peace
+        </author>
 
-    <content src="index.html" />
-    <access origin="*" />
-    <preference name="fullscreen" value="false" />
-    <preference name="webviewbounce" value="false" />
-    <preference name="UIWebViewBounce" value="false" />
-    <preference name="DisallowOverscroll" value="true" />
-  
-  
-  <access origin="http://code.ionicframework.com/0.9.26/css/ionic.min.css" />  
-  <access origin="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js" />
-  <access origin="http://code.ionicframework.com/0.9.26/js/ionic.bundle.min.js" />
-  <access origin="http://parse.com/downloads/javascript/parse-1.2.17.min.js" />
-  
+        <content src="index.html" />
+        <access origin="*" />
+        <preference name="fullscreen" value="false" />
+        <preference name="webviewbounce" value="false" />
+        <preference name="UIWebViewBounce" value="false" />
+        <preference name="DisallowOverscroll" value="true" />
+
+
+        <access origin="http://code.ionicframework.com/0.9.26/css/ionic.min.css" />  
+        <access origin="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js" />
+        <access origin="http://code.ionicframework.com/0.9.26/js/ionic.bundle.min.js" />
+        <access origin="http://parse.com/downloads/javascript/parse-1.2.17.min.js" />
+
+        <icon src="icon.png" />
+        <gap:splash src="splash.png" />
+
+
 </widget>
