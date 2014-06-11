@@ -118,6 +118,8 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
 
                 me.HLT_waste_water = me.HLT_volume_after_second_addition - (me.MSH_second_water_volume + me.MSH_third_water_volume)                               
 
+                console.log(me)
+                
                 calculateBrewSteps(me)
 
 
