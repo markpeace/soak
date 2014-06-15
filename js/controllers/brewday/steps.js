@@ -29,14 +29,14 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
 
                                 // VARIABLES WHICH CHANGE DEPENDING ON THE RECIPE
                                 MSH_grain_weight: recipeParameters.ingredients.total_fermentables,       // in kg
-                                MSH_temperature: 68,       // in C
+                                MSH_temperature: parseInt(prompt("Preferred Mash Temperature", 68)),       // in C
                                 MSH_thickness: 2.75,       // in l/kg
-                                MSH_time: 60,              // in mins
+                                MSH_time: parseInt(prompt("Preferred Mash Time", 60)),              // in mins
                                 MSH_mashout_temp: 75,      // in C
                                 FMT_volume: 21,            // in l
 
                                 CPR_hop_weight: recipeParameters.ingredients.total_hops,       // in g
-                                CPR_boiltime:60,           // in mins
+                                CPR_boiltime: recipeParameters.boiltime,           // in mins
 
 
                                 // EQUIPMENT PROFILE

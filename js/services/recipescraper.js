@@ -41,6 +41,11 @@ brewbox.factory('RecipeScraper', function($http) {
                                         })        
                                 })                               
 
+                                boiltime=result.substr(result.indexOf("<boil_time>")+11)                                
+                                boiltime=boiltime.substr(0,boiltime.indexOf("</"))
+                                
+                                r.boiltime=parseInt(boiltime)
+                                
                                 recipe.set("xml", r)
                                 recipe.save();
 
