@@ -1,4 +1,4 @@
-brewbox.controller('RecipeProfile', function($scope, $stateParams, $ionicModal) { 
+brewbox.controller('RecipeProfile', function($scope, $stateParams, $ionicModal,RecipeScraper) { 
 
 
         $scope.moment=moment
@@ -54,6 +54,10 @@ brewbox.controller('RecipeProfile', function($scope, $stateParams, $ionicModal) 
 
                 });
 
+        }
+        
+        $scope.refreshIngredients = function () {
+                RecipeScraper.updateRecipeXML($scope.recipe)
         }
 
 });

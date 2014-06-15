@@ -4,7 +4,13 @@
                         <h2><b>{{ recipe.get('name') }}</b></h2>
                         <h2>{{ recipe.get('style') }}</h2>
                 </a>
-                
+
+                <div class="item item-icon-right" ng-click="refreshIngredients()">
+                        Refresh Ingredients
+                        <i class="icon ion-ios7-refresh-empty"></i>
+
+                </div>
+
                 <div class="item item-divider item-icon-right" ng-click="newBrewday.show()">
                         Brew Days
                         <i class="icon ion-ios7-plus-outline"></i>
