@@ -12,7 +12,7 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                         if(result.length==0) {$state.go("ui.splash")}
                         $scope.brewday=result[0]
                         if(result[0].get("steps")) { resumeBrewday(); } else { compileBrewParameters(); }
-                        compileBrewParameters();
+                        //compileBrewParameters();
                 })
 
         }
@@ -260,6 +260,7 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                                 hardwareReference: "hlt",
                                 hardwareVariable: "vol"
                         }
+                        
                 ], function (step) {
                         newStep = new stepTemplate
                         angular.forEach(step, function(value,key) { newStep[key]=value })
