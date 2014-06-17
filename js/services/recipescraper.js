@@ -20,20 +20,38 @@ brewbox.factory('RecipeScraper', function($http, ParseService) {
         };
 
 
-        var storeIngredients=function(recipe) {
-                
-                /*ingredient = new (Parse.Object.extend("Ingredient"))
-                ingredient.save({type:ingredientType, label: ingredientLabel}).then(function(newIngredient) {
-                        
-                        new Parse.Query("Ingredient")
-                        .equalTo("label", newIngredient.get('label'))
-                        .find().then(function(c) {
-                                console.log(newIngredient.get('label'))	
-                                console.log(c.length)
-                        })
-                        
+        var storeIngredients=function(ingredients) {
 
-                })*/                
+                toAdd = []
+
+                angular.forEach(['fermentable','hop', 'yeast'], function(ingredientType) {
+                        angular.forEach(ingredients[ingredientType+"s"],function(ingredient) {
+                                toAdd.push({type: ingredientType, label: ingredient.label})
+                        })
+                })
+
+                i=-1;
+
+                var addIngredient = function() {
+                        i=i+1;
+                        console.log(i)
+                        if (i<toAdd.length) {
+                                ingredientQuery = new Parse.Query("Ingredient")
+                                .equalTo("type", toAdd[i].type)
+                                .equalTo("label", toAdd[i].label)
+                                .count().then(function(r) {
+
+                                        if (r==0) {
+                                                ingredient = new (Parse.Object.extend("Ingredient"))
+                                                ingredient.save(toAdd[i]).then(addIngredient)
+                                        } else {
+                                                addIngredient();
+                                        }
+
+                                })
+                        }
+                }
+                addIngredient();        
 
         }
 
@@ -41,7 +59,6 @@ brewbox.factory('RecipeScraper', function($http, ParseService) {
         return {
                 updateRecipeXML: function (recipe) {
                         console.log("Updating Recipe XML")
-                        console.log(recipe)
                         $http({method: 'GET', url: "http://telnetservice.herokuapp.com/scrape/https/www.brewtoad.com/recipes/"+recipe.get('reference')+".xml" }).success(function(result) {                               
                                 result=decodeURIComponent(result.result.replace(/\+/g, ' ')).toLowerCase().replace("yeast", "yeasts")             
 
@@ -65,18 +82,16 @@ brewbox.factory('RecipeScraper', function($http, ParseService) {
 
                                         angular.forEach(ingredients, function(ingredient) {
 
-                                                name=ingredient.substr(ingredient.indexOf("<name>")+6)
-                                                name=name.substr(0,name.indexOf("</name>"))
+                                                label=ingredient.substr(ingredient.indexOf("<name>")+6)
+                                                label=label.substr(0,label.indexOf("</name>"))
 
                                                 amount=ingredient.substr(ingredient.indexOf("<amount>")+8)
                                                 amount=parseFloat(amount.substr(0,amount.indexOf("</amount>")))
 
                                                 if (isNaN(amount)) { amount = 1}
 
-                                                r.ingredients[ingredientType+"s"].push({name: name.toTitleCase(), amount: amount})
+                                                r.ingredients[ingredientType+"s"].push({label: label.toTitleCase(), amount: amount})
                                                 r.ingredients['total_'+ingredientType+"s"]=r.ingredients['total_'+ingredientType+"s"]+amount
-
-                                                //storeIngredient(ingredientType.toTitleCase(), name.toTitleCase())
 
                                         })        
                                 })                               
@@ -85,6 +100,8 @@ brewbox.factory('RecipeScraper', function($http, ParseService) {
                                 boiltime=boiltime.substr(0,boiltime.indexOf("</"))
 
                                 r.boiltime=parseInt(boiltime)
+
+                                storeIngredients(r.ingredients)
 
                                 recipe.set("xml", r)
                                 recipe.save();
