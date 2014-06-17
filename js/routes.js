@@ -50,7 +50,18 @@ brewbox.config(function($stateProvider, $urlRouterProvider) {
                         }
                 }
         })
-
+        .state('ui.inventory', {
+                url: '/inventory',
+                views: {
+                        'centre-panel': {
+                                templateUrl: 'pages/inventory/list.html',
+                                controller: 'ListInventory'
+                        },
+                        'left-panel': {
+                                templateUrl: 'pages/menu.html'
+                        }
+                }
+        })
         $urlRouterProvider.otherwise("/ui/brewday");
 
 })
