@@ -41,6 +41,7 @@ brewbox.factory('RecipeScraper', function($http, ParseService) {
         return {
                 updateRecipeXML: function (recipe) {
                         console.log("Updating Recipe XML")
+                        console.log(recipe)
                         $http({method: 'GET', url: "http://telnetservice.herokuapp.com/scrape/https/www.brewtoad.com/recipes/"+recipe.get('reference')+".xml" }).success(function(result) {                               
                                 result=decodeURIComponent(result.result.replace(/\+/g, ' ')).toLowerCase().replace("yeast", "yeasts")             
 
@@ -75,7 +76,7 @@ brewbox.factory('RecipeScraper', function($http, ParseService) {
                                                 r.ingredients[ingredientType+"s"].push({name: name.toTitleCase(), amount: amount})
                                                 r.ingredients['total_'+ingredientType+"s"]=r.ingredients['total_'+ingredientType+"s"]+amount
 
-                                                storeIngredient(ingredientType.toTitleCase(), name.toTitleCase())
+                                                //storeIngredient(ingredientType.toTitleCase(), name.toTitleCase())
 
                                         })        
                                 })                               
