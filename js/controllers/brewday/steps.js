@@ -267,6 +267,33 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                                 targetValueUnit: "seconds",
                                 hardwareReference: "msh",
                                 hardwareVariable: "pumpActivatedFor"
+                        },
+                        { 
+                                title: "Transfer Second Water Addition",
+                                command: "HLT SET VOL ",
+                                targetValue: me.HLT_first_water_volume-(me.MSH_first_water_volume+me.HLT_second_water_volume),
+                                targetValueUnit: "l",
+                                hardwareReference: "hlt",
+                                hardwareVariable: "vol"
+                        },
+                        { 
+                                title: "Set HLT to Mash Out Temperature",
+                                trigger:"auto",
+                                command: "HLT SET TEMP ",
+                                targetValue: me.MSH_mashout_temp,
+                                targetValueUnit: "&deg;C",
+                                hardwareReference: "hlt",
+                                hardwareVariable: "temp"
+                        },
+                        { 
+                                title: "Stop Recirculation (tube to copper)",
+                                trigger:"auto",
+                                continueWithoutCompletion:true,
+                                command: "MSH PUMP OFF",
+                                targetValue: "",
+                                targetValueUnit: "",
+                                hardwareReference: "msh",
+                                hardwareVariable: "pumpActivatedFor"
                         }
                         
                 ], function (step) {
