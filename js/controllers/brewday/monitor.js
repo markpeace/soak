@@ -10,7 +10,7 @@ brewbox.controller('Monitor', function($scope) {
                 }
         },{
                 title: 'Mash Tun',      
-                hardwareReference: 'hlt',
+                hardwareReference: 'msh',
                 indicators: { 
                         level: { colour: 'GoldenRod' },
                         temperature: { readingVariable: 'temp' }

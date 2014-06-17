@@ -2,13 +2,14 @@ brewbox.factory('HardwareInterface', function($http, $interval) {
 
         var settings = {
                 activated: false,
-                pulseInterval: 2000,
+                pulseInterval: 1000,
                 requestsMade: 0,
                 server: 'http://telnetservice.herokuapp.com/telnet/bowerfold.dlinkddns.com'
         }
 
         var hardwareReadings= {
-                hlt: {parameters:{}, readings: {}}
+                hlt: {parameters:{}, readings: {}},
+                msh: {parameters:{}, readings: {}}
         }
 
         var requestQueue = [{
@@ -20,6 +21,11 @@ brewbox.factory('HardwareInterface', function($http, $interval) {
                 port: 200,
                 command: "HLT PING",
                 assignResponseTo: "hardwareReadings.hlt.readings",
+                requeueAfterProcessing: true,
+        },{
+                port: 200,
+                command: "MSH PING",
+                assignResponseTo: "hardwareReadings.msh.readings",
                 requeueAfterProcessing: true,
         }]
 
