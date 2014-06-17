@@ -20,15 +20,20 @@ brewbox.factory('RecipeScraper', function($http, ParseService) {
         };
 
 
-        var storeIngredient=function(ingredientType, ingredientLabel) {
+        var storeIngredients=function(recipe) {
+                
+                /*ingredient = new (Parse.Object.extend("Ingredient"))
+                ingredient.save({type:ingredientType, label: ingredientLabel}).then(function(newIngredient) {
+                        
+                        new Parse.Query("Ingredient")
+                        .equalTo("label", newIngredient.get('label'))
+                        .find().then(function(c) {
+                                console.log(newIngredient.get('label'))	
+                                console.log(c.length)
+                        })
+                        
 
-                new Parse.Query("Ingredient")
-                .equalTo("type", ingredientType)
-                .equalTo("label", ingredientLabel)
-                .count().then(function(c) {
-                        console.log(c)
-                        if(c==0) {(new (Parse.Object.extend("Ingredient"))).save({type:ingredientType, label: ingredientLabel}) } 
-                })
+                })*/                
 
         }
 
