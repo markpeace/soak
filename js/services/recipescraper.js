@@ -35,13 +35,13 @@ brewbox.factory('RecipeScraper', function($http, ParseService) {
                 var addIngredient = function() {
                         i=i+1;
                         if (i<toAdd.length) {
-                                ingredientQuery = new Parse.Query("Ingredient")
+                                ingredientQuery = new Parse.Query("Inventory")
                                 .equalTo("type", toAdd[i].type)
                                 .equalTo("label", toAdd[i].label)
                                 .count().then(function(r) {
 
                                         if (r==0) {
-                                                ingredient = new (Parse.Object.extend("Ingredient"))
+                                                ingredient = new (Parse.Object.extend("Inventory"))
                                                 ingredient.save(toAdd[i]).then(addIngredient)
                                         } else {
                                                 addIngredient();
