@@ -1,16 +1,16 @@
 <ion-list>
-       
-        <ion-item class="item-icon-right" ng-repeat="item in inventory">
-                <h2>{{ item.get('label') }}</h2>
-                <p>{{ recipe.get('style') }}</p>
-                <i class="icon ion-ios7-arrow-right" ng-show="selectedID==recipe.id"></i>
-        </ion-item>
-
-
-        <div class="tabs">
-                <a class="tab-item selected" ng-repeat="type in types">
-                        {{ type }}
-                </a>
-        </div>
-
+	  
+	   
+	<div class="button-bar bar-positive">
+			  <a class="button" ng-class="selectedType===type ? 'button-dark' : ''" 
+			  ng-repeat="type in types" ng-click="$parent.selectedType=type">
+				{{ type }}
+			</a>
+		</div>
+	   
+		<ion-item class="item-icon-right" ng-repeat="item in inventory | filter: selectedType">
+				<h2>{{ item.get('label') }}</h2>
+				<p>{{ recipe.get('style') }}</p>
+				<i class="icon ion-ios7-arrow-right" ng-show="selectedID==recipe.id"></i>
+		</ion-item>
 </ion-list>
