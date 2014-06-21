@@ -1,5 +1,7 @@
 brewbox.controller('ListInventory', function($scope, HardwareInterface, $stateParams, $state, RecipeScraper, $ionicListDelegate) { 
 	   
+		$scope.selectedID=$stateParams.ingredient_id
+	   
 		var getInventory = function () {
 		(new Parse.Query("Inventory"))
 				.equalTo("typeOf", null)
@@ -16,7 +18,15 @@ brewbox.controller('ListInventory', function($scope, HardwareInterface, $statePa
 								if (!exists) { $scope.types.push(i.get("type")) }
 						})
 						
-						$scope.selectedType=$scope.types[0]
+						if ($scope.selectedID) {
+							(new Parse.Query("Inventory"))
+							.get($scope.selectedID).then(function(result){
+								$scope.selectedType=result.get("type")
+							})
+						} else {
+							$scope.selectedType=$scope.types[0]
+						}
+						
 						
 				})
 		}

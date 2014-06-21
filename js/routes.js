@@ -51,7 +51,7 @@ brewbox.config(function($stateProvider, $urlRouterProvider) {
                 }
         })
         .state('ui.inventory', {
-                url: '/inventory',
+                url: '/inventory/:ingredient_id',
                 views: {
                         'centre-panel': {
                                 templateUrl: 'pages/inventory/list.html',

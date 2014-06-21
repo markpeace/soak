@@ -1,5 +1,4 @@
 <ion-list>
-	  
 	   
 	<div class="button-bar bar-positive">
 			  <a class="button" ng-class="selectedType===type ? 'button-dark' : ''" 
@@ -8,9 +7,9 @@
 			</a>
 		</div>
 	   
-		<ion-item class="item-icon-right" ng-repeat="item in inventory | filter: selectedType">
-				<h2>{{ item.get('label') }}</h2>
-				<p>{{ recipe.get('style') }}</p>
-				<i class="icon ion-ios7-arrow-right" ng-show="selectedID==recipe.id"></i>
+		<ion-item class="item-icon-right" ng-repeat="item in inventory | filter: selectedType"
+		ui-sref='ui.inventory({ ingredient_id: item.id})'>
+				<h2>{{ item.get('label') }} - 2000g </h2>
+				<i class="icon ion-ios7-arrow-right" ng-show="selectedID==item.id"></i>
 		</ion-item>
 </ion-list>
