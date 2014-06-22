@@ -1,7 +1,10 @@
-brewbox.controller('ListInventory', function($scope, HardwareInterface, $stateParams, $state, RecipeScraper, $ionicListDelegate) { 
+brewbox.controller('ListInventory', function($scope, HardwareInterface, $stateParams, $state, RecipeScraper, $ionicSideMenuDelegate) { 
 	   
-		$scope.selectedID=$stateParams.ingredient_id
-	   
+		if ($stateParams.ingredient_id) { 
+               $scope.selectedID=$stateParams.ingredient_id;
+               $ionicSideMenuDelegate.toggleRight();           //      <-- This was causing problems, probably an Ionic version bug
+        }         
+        
 		var getInventory = function () {
 		(new Parse.Query("Inventory"))
 				.equalTo("typeOf", null)

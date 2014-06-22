@@ -59,6 +59,9 @@ brewbox.config(function($stateProvider, $urlRouterProvider) {
                         },
                         'left-panel': {
                                 templateUrl: 'pages/menu.html'
+                        },'right-panel': {
+                                templateUrl: 'pages/inventory/profile.html',
+                                controller: 'IngredientProfile'
                         }
                 }
         })
