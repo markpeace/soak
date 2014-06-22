@@ -1,21 +1,32 @@
 <div class="ion-view">
-		<ul class="list">
-				<a class="item">
-						<h2>{{ ingredient.get('label') }}</h2> 
-				</a>
+        <ul class="list">
+                <a class="item">
+                        <h2>{{ ingredient.get('label') }}</h2> 
+                </a>
 
-  <label class="item item-input item-select">
-	<div class="input-label">
-	  Set As Type Of:
-	</div>
-	
-	<select
-    ng-model="myOption"
-    ng-options="ingredient.id as ingredient.get('label') for ingredient in ingredients"
-    ng-change="setEquivalent(ingredient.id)">
-	</select>
-	
-  </label>
-				
-		</ul>
+                <div class="item"  ng-show="ingredient.get('equivalent').id">
+                        <p>
+                                A type of {{ ingredient.get('equivalent').get('label') }} 
+                                <a ng-click="setEquivalent(null)">[remove]</a>
+                        </p>
+                </div>
+                
+                <label class="item item-input item-select" ng-hide="ingredient.get('equivalent').id">
+                        <div class="input-label">
+                                Set As Type Of:
+                        </div>
+
+                        <select
+                                ng-model="selectedIngredient"
+                                ng-change="setEquivalent(selectedIngredient)">
+                                
+                                <option ng-repeat="i in ingredients"                                         
+                                        value="{{i.id}}">{{ i.get("label") }}</option>
+                                <option value="addone">Add a New Ingredient...</option>
+                                
+                        </select>
+
+                </label>
+
+        </ul>
 </div>   

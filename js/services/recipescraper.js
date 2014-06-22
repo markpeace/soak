@@ -1,4 +1,4 @@
-brewbox.factory('RecipeScraper', function($http, ParseService) {
+brewbox.factory('RecipeScraper', function($http, ParseService, $ionicLoading) {
 
         String.prototype.toTitleCase = function(){
                 var smallWords = /^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|vs?\.?|via)$/i;
@@ -48,6 +48,9 @@ brewbox.factory('RecipeScraper', function($http, ParseService) {
                                         }
 
                                 })
+                        } else {
+                        	    $ionicLoading.hide()
+                        	
                         }
                 }
                 addIngredient();        
@@ -58,6 +61,9 @@ brewbox.factory('RecipeScraper', function($http, ParseService) {
         return {
                 updateRecipeXML: function (recipe) {
                         console.log("Updating Recipe XML")
+                            $ionicLoading.show({
+      							template: 'Updating Ingredients...'
+      							})
                         $http({method: 'GET', url: "http://telnetservice.herokuapp.com/scrape/https/www.brewtoad.com/recipes/"+recipe.get('reference')+".xml" }).success(function(result) {                               
                                 result=decodeURIComponent(result.result.replace(/\+/g, ' ')).toLowerCase().replace("yeast", "yeasts")             
 
