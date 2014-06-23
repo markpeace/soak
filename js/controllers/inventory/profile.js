@@ -3,7 +3,7 @@ brewbox.controller('IngredientProfile', function($scope, $state, ParseService, $
         getIngredient = function() {
 
                 new Parse.Query(Parse.Object.extend("Inventory"))
-                .include("equivalent")
+                .include("parent")
                 .get($scope.selectedID).then(function(result) {
                         $scope.ingredient = result
                         getAllIngredients()
@@ -28,30 +28,37 @@ brewbox.controller('IngredientProfile', function($scope, $state, ParseService, $
                 getIngredient();
         }
 
-        $scope.setEquivalent = function (equivalent) {            
+        $scope.setParent = function (parent) {            
 
-                if (equivalent=="addone") {
+                if (parent=="addone") {
                         if (newIngredient=prompt("Name of New Ingredient")) {
                                 (new (Parse.Object.extend("Inventory")))
-                                .save({ 
-                                        label: newIngredient,
-                                        type: $scope.ingredient.get('type')
+                                .save({ label: newIngredient, type: $scope.ingredient.get('type')
                                 }).then(function(result){
-                                        dummyIngredient = new (Parse.Object.extend("Inventory"))
-                                        dummyIngredient.set("objectId", result.id)
-
-                                        $scope.ingredient.set("equivalent", dummyIngredient).save().then(function() {
-                                               $state.go($state.$current, null, { reload: true });
+                                        
+                                        result.relation("children").add($scope.ingredient)
+                                        result.save()
+                                                                                
+                                        $scope.ingredient.set("parent", result).save().then(function() {
+                                                $state.go($state.$current, null, { reload: true });
                                         })
                                 })
                         }                                
-                } else if (equivalent==null) {
-                        $scope.ingredient.set("equivalent", null).save()
-                } else {  
-                        dummyIngredient = new (Parse.Object.extend("Inventory"))
-                        dummyIngredient.set("objectId",$scope.selectedIngredient)
+                } else if (parent==null) {
 
-                        $scope.ingredient.set("equivalent", dummyIngredient).save().then(getIngredient)
+                        $scope.ingredient.get('parent').relation("children").remove($scope.ingredient)
+                        $scope.ingredient.get('parent').save()
+                        $scope.ingredient.set("parent", null).save()
+
+                } else {  
+
+                        new Parse.Query(Parse.Object.extend("Inventory"))
+                        .get(parent).then(function (parent) {
+                                parent.relation("children").add($scope.ingredient)
+                                parent.save()
+                                $scope.ingredient.set("parent", parent).save().then(getIngredient)
+                        })
+
                 }
         }
 

@@ -4,21 +4,22 @@
                         <h2>{{ ingredient.get('label') }}</h2> 
                 </a>
 
-                <div class="item"  ng-show="ingredient.get('equivalent').id">
+                <div class="item"  ng-show="ingredient.get('parent').id">
                         <p>
-                                A type of {{ ingredient.get('equivalent').get('label') }} 
-                                <a ng-click="setEquivalent(null)">[remove]</a>
+                                A type of 
+                                <a ui-sref="ui.inventory({ ingredient_id: ingredient.get('parent').id})">{{ ingredient.get('parent').get('label') }}</a>
+                                <a ng-click="setParent(null)">[remove]</a>
                         </p>
                 </div>
                 
-                <label class="item item-input item-select" ng-hide="ingredient.get('equivalent').id">
+                <label class="item item-input item-select" ng-hide="ingredient.get('parent').id">
                         <div class="input-label">
                                 Set As Type Of:
                         </div>
 
                         <select
                                 ng-model="selectedIngredient"
-                                ng-change="setEquivalent(selectedIngredient)">
+                                ng-change="setParent(selectedIngredient)">
                                 
                                 <option ng-repeat="i in ingredients"                                         
                                         value="{{i.id}}">{{ i.get("label") }}</option>
