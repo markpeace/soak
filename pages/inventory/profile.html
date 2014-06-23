@@ -4,30 +4,40 @@
                         <h2>{{ ingredient.get('label') }}</h2> 
                 </a>
 
-                <div class="item"  ng-show="ingredient.get('parent').id">
-                        <p>
-                                A type of 
-                                <a ui-sref="ui.inventory({ ingredient_id: ingredient.get('parent').id})">{{ ingredient.get('parent').get('label') }}</a>
-                                <a ng-click="setParent(null)">[remove]</a>
-                        </p>
-                </div>
-                
-                <label class="item item-input item-select" ng-hide="ingredient.get('parent').id">
-                        <div class="input-label">
-                                Set As Type Of:
+                <span ng-hide="ingredient.get('childCount')">
+
+                        <div class="item"  ng-show="ingredient.get('parent').id">
+                                <p>
+                                        A type of 
+                                        <a ui-sref="ui.inventory({ ingredient_id: ingredient.get('parent').id})">{{ ingredient.get('parent').get('label') }}</a>
+                                        <a ng-click="setParent(null)">[remove]</a>
+                                </p>
                         </div>
 
-                        <select
-                                ng-model="selectedIngredient"
-                                ng-change="setParent(selectedIngredient)">
-                                
-                                <option ng-repeat="i in ingredients"                                         
-                                        value="{{i.id}}">{{ i.get("label") }}</option>
-                                <option value="addone">Add a New Ingredient...</option>
-                                
-                        </select>
+                        <label class="item item-input item-select" ng-hide="ingredient.get('parent').id">
+                                <div class="input-label">
+                                        Set As Type Of:
+                                </div>
 
-                </label>
+                                <select
+                                        ng-model="selectedIngredient"
+                                        ng-change="setParent(selectedIngredient)">
 
+                                        <option ng-repeat="i in ingredients"                                         
+                                                value="{{i.id}}">{{ i.get("label") }}</option>
+                                        <option value="addone">Add a New Ingredient...</option>
+
+                                </select>
+
+                        </label>
+                </span>
+                <span ng-show="ingredient.get('childCount')">
+                        <div class="item item-divider">
+                                Equivalents:
+                        </div>
+                        <a class="item" ui-sref="ui.inventory({ ingredient_id: child.id})" ng-repeat="child in ingredientChildren">
+                                {{child.get('label')}}
+                        </a>
+                </span>
         </ul>
 </div>   

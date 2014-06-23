@@ -8,6 +8,7 @@ brewbox.controller('ListInventory', function($scope, HardwareInterface, $statePa
         var getInventory = function () {
                 (new Parse.Query("Inventory"))
                 .equalTo("typeOf", null)
+                .equalTo("parent", null)
                 .ascending("label")
                 .find().then(function (result) {
                         $scope.inventory = result
