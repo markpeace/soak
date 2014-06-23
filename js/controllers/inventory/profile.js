@@ -34,11 +34,12 @@ brewbox.controller('IngredientProfile', function($scope, $state, ParseService, $
                         if (newIngredient=prompt("Name of New Ingredient")) {
                                 (new (Parse.Object.extend("Inventory")))
                                 .save({ label: newIngredient, type: $scope.ingredient.get('type')
-                                }).then(function(result){
-                                        
+                                      }).then(function(result){
+
                                         result.relation("children").add($scope.ingredient)
+                                        result.set("childCount", 1)
                                         result.save()
-                                                                                
+
                                         $scope.ingredient.set("parent", result).save().then(function() {
                                                 $state.go($state.$current, null, { reload: true });
                                         })
@@ -47,6 +48,7 @@ brewbox.controller('IngredientProfile', function($scope, $state, ParseService, $
                 } else if (parent==null) {
 
                         $scope.ingredient.get('parent').relation("children").remove($scope.ingredient)
+                        $scope.ingredient.get('parent').set("childCount", $scope.ingredient.get('parent').get("childCount")-1)
                         $scope.ingredient.get('parent').save()
                         $scope.ingredient.set("parent", null).save()
 
@@ -55,6 +57,8 @@ brewbox.controller('IngredientProfile', function($scope, $state, ParseService, $
                         new Parse.Query(Parse.Object.extend("Inventory"))
                         .get(parent).then(function (parent) {
                                 parent.relation("children").add($scope.ingredient)
+                                parent.set("childCount", 1 + (parent.get("childCount") || 0))
+                                console.log( parent.get("childCount"))
                                 parent.save()
                                 $scope.ingredient.set("parent", parent).save().then(getIngredient)
                         })
@@ -62,4 +66,4 @@ brewbox.controller('IngredientProfile', function($scope, $state, ParseService, $
                 }
         }
 
-});
+}) 
