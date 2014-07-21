@@ -1,5 +1,5 @@
 brewbox.controller('Splash', function($scope, $state) { 
-
+/*
         dateSelect = new Parse.Query(Parse.Object.extend("Brewday"))
         .greaterThan("date", moment().subtract("days",1).toDate())       
         .lessThan("date", moment().add("days",2).toDate())
@@ -14,5 +14,5 @@ brewbox.controller('Splash', function($scope, $state) {
                 if (result.length>0) {
                         console.log($state.go("ui.brewday", {id: result[0].id}))
                 }
-        })       
+        })       */
 });

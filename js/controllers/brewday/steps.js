@@ -4,7 +4,8 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
         HardwareInterface.requestQueue.push({ port: 200, command: "HLT SET VOL 35" })
         HardwareInterface.requestQueue.push({ port: 200, command: "HLT SET TEMP 74" })
 
-        var getRecipe = function () {
+       /* var getRecipe = function () {
+                return compileBrewParameters();
                 (new Parse.Query("Brewday"))
                 .equalTo("objectId", $stateParams.id)
                 .include("recipe")          
@@ -16,27 +17,27 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                 })
 
         }
-        getRecipe();
+        getRecipe();*/
 
 
         var compileBrewParameters = function () {
-                RecipeScraper.updateRecipeXML($scope.brewday.get("recipe"))
+                //RecipeScraper.updateRecipeXML($scope.brewday.get("recipe"))
 
                 $scope.$watch('$scope.brewday.get("recipe").get("xml")', function(val){
-                        recipeParameters = $scope.brewday.get("recipe").get("xml")
+                        //x	recipeParameters = $scope.brewday.get("recipe").get("xml")
 
                         brewParameters={
 
                                 // VARIABLES WHICH CHANGE DEPENDING ON THE RECIPE
-                                MSH_grain_weight: recipeParameters.ingredients.total_fermentables,       // in kg
+                                MSH_grain_weight: 7.25, //recipeParameters.ingredients.total_fermentables,       // in kg
                                 MSH_temperature: parseInt(prompt("Preferred Mash Temperature", 68)),       // in C
                                 MSH_thickness: 2.75,       // in l/kg
                                 MSH_time: parseInt(prompt("Preferred Mash Time", 60)),              // in mins
                                 MSH_mashout_temp: 75,      // in C
-                                FMT_volume: 21,            // in l
+                                FMT_volume: 24,            // in l
 
-                                CPR_hop_weight: recipeParameters.ingredients.total_hops,       // in g
-                                CPR_boiltime: recipeParameters.boiltime,           // in mins
+                                CPR_hop_weight: 163, //recipeParameters.ingredients.total_hops,       // in g
+                                CPR_boiltime: 60, //recipeParameters.boiltime,           // in mins
 
 
                                 // EQUIPMENT PROFILE
@@ -316,5 +317,7 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
 
                 console.log("resumed")
         }        
+        
+        compileBrewParameters();
 
 });

@@ -1,119 +1,150 @@
-brewbox.factory('RecipeScraper', function($http, ParseService, $ionicLoading) {
+brewbox.factory ('RecipeScraper', function($http, ParseService, $ionicLoading ) {
 
-        String.prototype.toTitleCase = function(){
-                var smallWords = /^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|vs?\.?|via)$/i;
+        var BrewtoadID = "39308"
 
-                return this.replace(/[A-Za-z0-9\u00C0-\u00FF]+[^\s-]*/g, function(match, index, title){
-                        if (index > 0 && index + match.length !== title.length &&
-                            match.search(smallWords) > -1 && title.charAt(index - 2) !== ":" &&
-                            (title.charAt(index + match.length) !== '-' || title.charAt(index - 1) === '-') &&
-                            title.charAt(index - 1).search(/[^\s-]/) < 0) {
-                                return match.toLowerCase();
-                        }
+        var _retrieveBrewtoadRecipeList = function() { 
 
-                        if (match.substr(1).search(/[A-Z]|\../) > -1) {
-                                return match;
-                        }
+                recipesToAdd = []
+                brewtoadRecipeCount = 0
 
-                        return match.charAt(0).toUpperCase() + match.substr(1);
-                });
-        };
+                getBrewtoadList = function () {     
 
+                        $ionicLoading.show({ template: 'Retrieving List of Brewtoad Recipes' })
 
-        var storeIngredients=function(ingredients) {
+                        $http({method: 'GET', url: "http://telnetservice.herokuapp.com/scrape/https/www.brewtoad.com/users/" + BrewtoadID+ "/recipes" })
+                        .error(function() { getBrewtoadList() })
+                        .success(function(r) {                                                                                
+                                count = decodeURI(r.result)
+                                count = count.substr(0, count.indexOf(' Recipes</strong></li>'))
+                                count = count.substr(count.lastIndexOf(">")+1)
+                                count.to_i
 
-                toAdd = []
+                                if(count>brewtoadRecipeCount) { brewtoadRecipeCount=count }
 
-                angular.forEach(['fermentable','hop', 'yeast'], function(ingredientType) {
-                        angular.forEach(ingredients[ingredientType+"s"],function(ingredient) {
-                                toAdd.push({type: ingredientType, label: ingredient.label})
-                        })
-                })
+                                recipesOnPage=decodeURI(r.result)
+                                recipesOnPage=recipesOnPage.substr(recipesOnPage.indexOf('<li class="recipe-container">'))
 
-                i=-1;
+                                angular.forEach(recipesOnPage.split('<li class="recipe-container">'), function(recipe) {
+                                        newRecipe={}
+                                        newRecipe.reference = recipe.substring(recipe.indexOf('recipes/')+8)
+                                        newRecipe.reference = newRecipe.reference.substring(0, newRecipe.reference.indexOf('" class'))
 
-                var addIngredient = function() {
-                        i=i+1;
-                        if (i<toAdd.length) {
-                                ingredientQuery = new Parse.Query("Inventory")
-                                .equalTo("type", toAdd[i].type)
-                                .equalTo("label", toAdd[i].label)
-                                .count().then(function(r) {
+                                        newRecipe.name = recipe.substring(recipe.indexOf('class="name">')+13)
+                                        newRecipe.name = newRecipe.name.substring(0, newRecipe.name.indexOf("</span>"))
 
-                                        if (r==0) {
-                                                ingredient = new (Parse.Object.extend("Inventory"))
-                                                ingredient.save(toAdd[i]).then(addIngredient)
-                                        } else {
-                                                addIngredient();
-                                        }
+                                        newRecipe.style = recipe.substring(recipe.indexOf('class="style">')+14)
+                                        newRecipe.style = newRecipe.style.substring(0, newRecipe.style.indexOf("</span>"))
 
+                                        exists=false
+                                        angular.forEach(recipesToAdd, function(toAdd) {
+                                                if (toAdd.reference == newRecipe.reference) { exists=true}
+                                        })
+
+                                        if (!exists && newRecipe.reference!="") { recipesToAdd.push(newRecipe) }
                                 })
-                        } else {
-                        	    $ionicLoading.hide()
-                        	
-                        }
+
+                                console.log(recipesToAdd.length + " recipes found")
+
+                                if (recipesToAdd.length == brewtoadRecipeCount) {                                                
+                                        $ionicLoading.hide();
+                                        _updateParseRecipes(recipesToAdd)
+                                } else {
+                                        getBrewtoadList();
+                                }                                         
+
+                        })
+
                 }
-                addIngredient();        
+
+
+                getBrewtoadList();
+
+        }
+
+        var _updateParseRecipes = function (recipesToAdd) {
+
+                $ionicLoading.show({ template: 'Updating Parse Database' })
+
+                parseRecipes=[]
+                var getParseRecipes=function() {
+                        (new Parse.Query("Recipe"))
+                        .find().then(function(r) {
+                                parseRecipes=r;
+                                deleteRemovedRecipes()
+                        })
+                }
+
+                var deleteRemovedRecipes = function () {
+                        
+                        angular.forEach(parseRecipes, function(parseRecipe) {
+                                
+                                isFound=false
+                                
+                                angular.forEach(recipesToAdd, function (recipeToAdd) {
+                                        if (parseRecipe.get("reference")==recipeToAdd.reference) { isFound=true }
+                                })
+                                
+                                if (!isFound) { 
+                                        console.log("Removed " + parseRecipe.get("name"))
+                                        parseRecipe.destroy() 
+                                }
+                                                                
+                        })
+                        
+                        findAddedRecipes()
+                }
+
+                recipesToScrape = []
+                var findAddedRecipes = function () {
+                        angular.forEach(recipesToAdd,function(recipeToAdd) {
+
+                                alreadyExists=false
+
+                                angular.forEach(parseRecipes, function(parseRecipe) {
+                                        if(parseRecipe.get("reference") == recipeToAdd.reference) { alreadyExists=true }
+                                })
+
+                                if (!alreadyExists) { recipesToScrape.push(recipeToAdd) }
+
+                        }) 
+
+                        insertAddedRecipes()
+
+                }
+
+                addedRecipeIndex=-1
+                var insertAddedRecipes = function() {
+                        
+                        addedRecipeIndex++
+
+                        if (addedRecipeIndex==recipesToScrape.length) {
+                                $ionicLoading.hide()
+                                console.log("done")
+                                return;
+                        } else {
+                                 (new (Parse.Object.extend("Recipe")))
+                                .save({ 
+                                        reference: recipesToScrape[addedRecipeIndex].reference,
+                                        name: recipesToScrape[addedRecipeIndex].name,
+                                        style: recipesToScrape[addedRecipeIndex].style
+                                }).then(function(r) {
+                                        console.log("added " + recipesToScrape[addedRecipeIndex].name)
+                                        recipesToScrape[addedRecipeIndex]=r
+                                        insertAddedRecipes()                                        
+                                }) 
+                        }
+
+                }
+
+                getParseRecipes()                
 
         }
 
 
         return {
-                updateRecipeXML: function (recipe) {
-                        console.log("Updating Recipe XML")
-                            $ionicLoading.show({
-      							template: 'Updating Ingredients...'
-      							})
-                        $http({method: 'GET', url: "http://telnetservice.herokuapp.com/scrape/https/www.brewtoad.com/recipes/"+recipe.get('reference')+".xml" }).success(function(result) {                               
-                                result=decodeURIComponent(result.result.replace(/\+/g, ' ')).toLowerCase().replace("yeast", "yeasts")             
 
-                                var r = {
-                                        ingredients:{
-                                                total_fermentables:0,
-                                                fermentables: [],
-                                                total_hops: 0,
-                                                hops:[]
-                                        }
-                                }                                
+                retrieveBrewtoadRecipeList: function() { _retrieveBrewtoadRecipeList() }
 
-                                angular.forEach(['fermentable','hop', 'yeast'],function(ingredientType) {
-
-                                        r.ingredients[ingredientType+"s"]=[]
-                                        r.ingredients["total_"+ingredientType+"s"]=0                                                                                
-
-                                        ingredients=result.substr(result.indexOf("<" + ingredientType + ">")+13)                                
-                                        ingredients=ingredients.substr(0,ingredients.indexOf("</" + ingredientType + "s>"))
-                                        ingredients=ingredients.split("<"+ingredientType+">")
-
-                                        angular.forEach(ingredients, function(ingredient) {
-
-                                                label=ingredient.substr(ingredient.indexOf("<name>")+6)
-                                                label=label.substr(0,label.indexOf("</name>"))
-
-                                                amount=ingredient.substr(ingredient.indexOf("<amount>")+8)
-                                                amount=parseFloat(amount.substr(0,amount.indexOf("</amount>")))
-
-                                                if (isNaN(amount)) { amount = 1}
-
-                                                r.ingredients[ingredientType+"s"].push({label: label.toTitleCase(), amount: amount})
-                                                r.ingredients['total_'+ingredientType+"s"]=r.ingredients['total_'+ingredientType+"s"]+amount
-
-                                        })        
-                                })                               
-
-                                boiltime=result.substr(result.indexOf("<boil_time>")+11)                                
-                                boiltime=boiltime.substr(0,boiltime.indexOf("</"))
-
-                                r.boiltime=parseInt(boiltime)
-
-                                storeIngredients(r.ingredients)
-
-                                recipe.set("xml", r)
-                                recipe.save();
-
-                        })
-                }
         }
-
 
 });
