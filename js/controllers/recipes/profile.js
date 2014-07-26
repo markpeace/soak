@@ -57,7 +57,7 @@ brewbox.controller('RecipeProfile', function($scope, $stateParams, $ionicModal,R
         }
         
         $scope.refreshIngredients = function () {
-                RecipeScraper.updateRecipeXML($scope.recipe)
+                RecipeScraper.retrieveRecipeDetails([$scope.recipe])
         }
 
 });
