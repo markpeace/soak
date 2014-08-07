@@ -23,8 +23,8 @@ brewbox.controller('ListInventory', function($scope, HardwareInterface, $statePa
                         })
 
                         if ($scope.selectedID) {
-                                (new Parse.Query("Inventory"))
-                                .get($scope.selectedID).then(function(result){
+                                (new Parse.Query("Ingredient"))
+                                .get($scope.selectedID).then(function(result){                                        
                                         $scope.selectedType=result.get("type")
                                 })
                         } else {
