@@ -1,7 +1,7 @@
 <div class="ion-view">
         <ul class="list">
                 <a class="item">
-                        <h2>{{ ingredient.get('label') }}</h2> 
+                        <h2>{{ ingredient.get('name') }}</h2> 
                 </a>
 
                 <span ng-hide="ingredient.get('childCount')">
@@ -9,7 +9,7 @@
                         <div class="item"  ng-show="ingredient.get('parent').id">
                                 <p>
                                         A type of 
-                                        <a ui-sref="ui.inventory({ ingredient_id: ingredient.get('parent').id})">{{ ingredient.get('parent').get('label') }}</a>
+                                        <a ui-sref="ui.inventory({ ingredient_id: ingredient.get('parent').id})">{{ ingredient.get('parent').get('name') }}</a>
                                         <a ng-click="setParent(null)">[remove]</a>
                                 </p>
                         </div>
@@ -24,7 +24,7 @@
                                         ng-change="setParent(selectedIngredient)">
 
                                         <option ng-repeat="i in ingredients"                                         
-                                                value="{{i.id}}">{{ i.get("label") }}</option>
+                                                value="{{i.id}}">{{ i.get("name") }}</option>
                                         <option value="addone">Add a New Ingredient...</option>
 
                                 </select>
@@ -36,7 +36,7 @@
                                 Equivalents:
                         </div>
                         <a class="item" ui-sref="ui.inventory({ ingredient_id: child.id})" ng-repeat="child in ingredientChildren">
-                                {{child.get('label')}}
+                                {{child.get('name')}}
                         </a>
                 </span>
         </ul>

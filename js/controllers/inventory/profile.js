@@ -2,7 +2,7 @@ brewbox.controller('IngredientProfile', function($scope, $state, ParseService, $
 
         getIngredient = function() {
 
-                new Parse.Query(Parse.Object.extend("Inventory"))
+                new Parse.Query(Parse.Object.extend("Ingredient"))
                 .include("parent")
                 .get($scope.selectedID).then(function(result) {
                         $scope.ingredient = result
@@ -17,11 +17,11 @@ brewbox.controller('IngredientProfile', function($scope, $state, ParseService, $
         }
 
         getAllIngredients = function () {
-                new Parse.Query(Parse.Object.extend("Inventory"))
+                new Parse.Query(Parse.Object.extend("Ingredient"))
                 .equalTo("type", $scope.ingredient.get("type"))
-                .notEqualTo("label", $scope.ingredient.get("label"))
+                .notEqualTo("name", $scope.ingredient.get("name"))
                 .equalTo("parent", null)
-                .ascending("label")
+                .ascending("name")
                 .find().then(function(result) {
                         $scope.ingredients = result
                         $scope.$apply()	                               
@@ -44,8 +44,8 @@ brewbox.controller('IngredientProfile', function($scope, $state, ParseService, $
 
                 if (parent=="addone") {
                         if (newIngredient=prompt("Name of New Ingredient")) {
-                                (new (Parse.Object.extend("Inventory")))
-                                .save({ label: newIngredient, type: $scope.ingredient.get('type')
+                                (new (Parse.Object.extend("Ingredient")))
+                                .save({ name: newIngredient, type: $scope.ingredient.get('type')
                                       }).then(function(result){
 
                                         result.relation("children").add($scope.ingredient)
@@ -68,7 +68,7 @@ brewbox.controller('IngredientProfile', function($scope, $state, ParseService, $
 
                 } else {  
 
-                        new Parse.Query(Parse.Object.extend("Inventory"))
+                        new Parse.Query(Parse.Object.extend("Ingredient"))
                         .get(parent).then(function (parent) {
                                 parent.relation("children").add($scope.ingredient)
                                 parent.set("childCount", 1 + (parent.get("childCount") || 0))
