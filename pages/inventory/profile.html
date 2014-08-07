@@ -1,7 +1,8 @@
 <div class="ion-view">
         <ul class="list">
-                <a class="item">
+                <a class="item" ng-click="setOnHand()">
                         <h2>{{ ingredient.get('name') }}</h2> 
+                        <p ng-show="ingredient.get('onHand')">{{ processOnhand(ingredient.get('onHand')) }} On Hand</p>
                 </a>
 
                 <span ng-hide="ingredient.get('childCount')">

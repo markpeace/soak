@@ -36,5 +36,14 @@ brewbox.controller('ListInventory', function($scope, HardwareInterface, $statePa
         }
         getInventory();
 
+        $scope.processOnhand = function (rawVal) {
+                if(!rawVal) {
+                        return ""
+                } else if(rawVal>999) {
+                        return (rawVal/1000)+"kg"
+                } else {
+                        return (rawVal)+"g"
+                }
+        }
 
 });

@@ -81,5 +81,23 @@ brewbox.controller('IngredientProfile', function($scope, $state, ParseService, $
 
                 }
         }
+        
+        $scope.processOnhand = function (rawVal) {
+                if(!rawVal) {
+                        return ""
+                } else if(rawVal>999) {
+                        return (rawVal/1000)+"kg"
+                } else {
+                        return (rawVal)+"g"
+                }
+        }
+        
+        $scope.setOnHand = function () {
+                amount=prompt("Enter Amount on Hand:")
+                console.log(amount)
+                $scope.ingredient.set("onHand", parseFloat(amount)).save().then(function(r){
+                        $state.go($state.$current, null, { reload: true });
+                })
+        }
 
 }) 

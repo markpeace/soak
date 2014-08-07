@@ -9,7 +9,8 @@
 
         <ion-item class="item-icon-right" ng-repeat="item in inventory | filter: selectedType"
                   ui-sref='ui.inventory({ ingredient_id: item.id})'>
-                <h2>{{ item.get('name') }} - 2000g </h2>
+                {{ item.get('name') }}
+                <span class="item-note" ng-show="item.get('onHand')">{{ processOnhand(item.get('onHand')) }}</span>
                 <i class="icon ion-ios7-arrow-right" ng-show="selectedID==item.id"></i>
         </ion-item>
 </ion-list>
