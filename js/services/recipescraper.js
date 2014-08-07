@@ -1,4 +1,4 @@
-brewbox.factory('RecipeScraper', function($http, ParseService, $ionicLoading ) {
+brewbox.factory('RecipeScraper', function($http, ParseService, $rootScope, $ionicLoading ) {
 
         var BrewtoadID = "39308"
 
@@ -141,23 +141,23 @@ brewbox.factory('RecipeScraper', function($http, ParseService, $ionicLoading ) {
         }
 
         var _retrieveRecipeDetails = function (recipesToScrape) {
-
-                $ionicLoading.show({ template: 'Scraping Recipe Details' })
+                
                 recipeIndex=-1
 
                 ingredientsToAdd=[]
-                
+
                 var scrapeRecipe=function() {                                                
 
                         recipeIndex++
 
                         if (recipeIndex==recipesToScrape.length) {
-                                $ionicLoading.hide()
-                                console.log("done")
+                                $ionicLoading.hide()                                
                                 _updateIngredientsList(ingredientsToAdd)
                                 return
                         }
 
+                        $ionicLoading.show({ template: 'Scraping Recipe Details: ' + (recipeIndex+1) + "/" + recipesToScrape.length })
+                        
                         $http({method: 'GET', url: "http://telnetservice.herokuapp.com/scrape/https/www.brewtoad.com/recipes/" + recipesToScrape[recipeIndex].get("reference")  })
                         .error(function() { scrapeRecipe() })
                         .success(function (result) {
@@ -178,7 +178,7 @@ brewbox.factory('RecipeScraper', function($http, ParseService, $ionicLoading ) {
                                 angular.forEach(result.split("<table"), function(table) {
                                         //SPLIT TABLE                                        
                                         table=table.match(/id='(.*?)'>.*<thead><tr>(.*?)<\/tr><\/thead><tbody>(.*?)<\/tbody>/)
-
+                                        
                                         //EXTRACT TITLE + GENERATE REFERENCE OBJECT
                                         target=(tables[table[1]]=[])
 
@@ -191,7 +191,7 @@ brewbox.factory('RecipeScraper', function($http, ParseService, $ionicLoading ) {
                                         headers[0]="name"
 
                                         //CYCLE THROUGH ROWS AND EXTRACT DATA     
-					table[3] = table[3].replace(/<\/tr>/g,"NEWROW")
+                                        table[3] = table[3].replace(/<\/tr>/g,"NEWROW")
                                         .replace(/<\/td>/g,"NEWCELL")
                                         .replace(/<[^>]*>/g, "")
                                         .replace(/NEWCELLNEWROW$/,"")
@@ -215,33 +215,33 @@ brewbox.factory('RecipeScraper', function($http, ParseService, $ionicLoading ) {
 
                                 //COMPILE RECIPE PROFILE
                                 recipeProfile.ingredients = {
-                                        fermentables: tables.fermentables,
-                                        hops: tables.hops,
+                                        fermentable: tables.fermentables,
+                                        hop: tables.hops,
                                         yeast: tables.yeasts
                                 }                    
                                 recipeProfile.mash_steps = tables.mash_steps
 
                                 err=""
-                                if(recipeProfile.ingredients.fermentables===undefined) { err=err+"- No fermentables are defined\n"}
-                                if(recipeProfile.ingredients.hops===undefined) { err=err+"- No hops are defined\n"}
+                                if(recipeProfile.ingredients.fermentable===undefined) { err=err+"- No fermentables are defined\n"}
+                                if(recipeProfile.ingredients.hop===undefined) { err=err+"- No hops are defined\n"}
                                 if(recipeProfile.ingredients.yeast===undefined) { err=err+"- No yeast is defined\n"}
                                 if(recipeProfile.mash_steps===undefined) { err=err+"- No mash steps are defined\n"}
 
                                 if (err) { alert("The recipe for " +recipesToScrape[recipeIndex].get("name")+ " was incomplete:\n"+err) }
-                                
+
                                 for(ingredientType in recipeProfile.ingredients) {
                                         angular.forEach(recipeProfile.ingredients[ingredientType], function(ingredient) {
-                                                recipeProfile.ingredients['total_'+ingredientType]=(recipeProfile.ingredients['total_'+ingredientType]|0)+(ingredient.amount  ? ingredient.amount : 1)
+                                                recipeProfile['total_'+ingredientType]=(recipeProfile.ingredients['total_'+ingredientType]|0)+(ingredient.amount  ? ingredient.amount : 1)
                                         })
                                 }
-				
+
                                 //ADD INGREDIENTS TO QUEUE
                                 ingredientsToAdd.push(recipeProfile.ingredients)
-                                
+
                                 //SAVE RECIPE PROFILE
                                 recipesToScrape[recipeIndex].set("profile", recipeProfile)
                                 recipesToScrape[recipeIndex].save()
-                                
+
                                 scrapeRecipe();
                         })
 
@@ -253,9 +253,62 @@ brewbox.factory('RecipeScraper', function($http, ParseService, $ionicLoading ) {
         }
 
         var _updateIngredientsList = function (ingredientsToAdd) {
-                console.log(ingredientsToAdd)
+                
+                //SANITISE INPUT INGREDIENTs
+                newList = []
+                angular.forEach(ingredientsToAdd, function(recipe) {
+                        for(type in recipe) {
+                                angular.forEach(recipe[type], function(item) {
+                                        isNew=true
+                                        angular.forEach(newList, function(newListItem) {                                                        
+                                                if(newListItem.name==item.name && newListItem.type==type) {
+                                                        isNew=false
+                                                }
+                                        })
+                                        if(isNew) {newList.push({type:type, name:item.name})}
+                                })
+                        } 
+                })        
+                ingredientsToAdd=newList
+
+                //ADD INGREDIENTS
+                ingredientIndex = -1
+
+                addIngredient = function () {
+
+                        ingredientIndex++
+                        if (ingredientIndex==ingredientsToAdd.length) {
+                                console.log("done");
+                                $ionicLoading.hide();
+                                $rootScope.$apply();
+                                return;
+                        }
+
+                        $ionicLoading.show({ template: 'Updating Ingredients: ' + (ingredientIndex+1) + "/" + (ingredientsToAdd.length) });                        
+                        
+                        (new Parse.Query("Ingredient"))
+                        .equalTo("type", ingredientsToAdd[ingredientIndex].type)
+                        .equalTo("name", ingredientsToAdd[ingredientIndex].name)
+                        .find().then(function(result) {
+                                if (result.length==0) {
+                                        (new (Parse.Object.extend("Ingredient")))
+                                        .save({ 
+                                                type:ingredientsToAdd[ingredientIndex].type,
+                                                name:ingredientsToAdd[ingredientIndex].name
+                                        }).then(function(r) {
+                                                addIngredient();
+                                        }) 
+                                } else {
+                                        addIngredient()
+                                }
+                        })                        			                                               
+
+                }
+                addIngredient();
+
+
         }
-        
+
         return {
 
                 retrieveBrewtoadRecipeList: function() { _retrieveBrewtoadRecipeList() },
