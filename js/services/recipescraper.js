@@ -1,4 +1,4 @@
-brewbox.factory('RecipeScraper', function($http, ParseService, $rootScope, $ionicLoading ) {
+brewbox.factory('RecipeScraper', function($http, ParseService, $state, $ionicLoading ) {
 
         var BrewtoadID = "39308"
 
@@ -280,7 +280,7 @@ brewbox.factory('RecipeScraper', function($http, ParseService, $rootScope, $ioni
                         if (ingredientIndex==ingredientsToAdd.length) {
                                 console.log("done");
                                 $ionicLoading.hide();
-                                $rootScope.$apply();
+                                $state.go($state.$current, null, { reload: true });
                                 return;
                         }
 
