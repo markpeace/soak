@@ -1,4 +1,4 @@
-brewbox.factory('RecipeScraper', function($http, ParseService, $state, $ionicLoading ) {
+brewbox.factory('RecipeScraper', function($http, ParseService, $q, $state, $ionicLoading ) {
 
         var BrewtoadID = "39308"
 
@@ -141,7 +141,7 @@ brewbox.factory('RecipeScraper', function($http, ParseService, $state, $ionicLoa
         }
 
         var _retrieveRecipeDetails = function (recipesToScrape) {
-                
+
                 recipeIndex=-1
 
                 ingredientsToAdd=[]
@@ -157,7 +157,7 @@ brewbox.factory('RecipeScraper', function($http, ParseService, $state, $ionicLoa
                         }
 
                         $ionicLoading.show({ template: 'Scraping Recipe Details: ' + (recipeIndex+1) + "/" + recipesToScrape.length })
-                        
+
                         $http({method: 'GET', url: "http://telnetservice.herokuapp.com/scrape/https/www.brewtoad.com/recipes/" + recipesToScrape[recipeIndex].get("reference")  })
                         .error(function() { scrapeRecipe() })
                         .success(function (result) {
@@ -178,7 +178,7 @@ brewbox.factory('RecipeScraper', function($http, ParseService, $state, $ionicLoa
                                 angular.forEach(result.split("<table"), function(table) {
                                         //SPLIT TABLE                                        
                                         table=table.match(/id='(.*?)'>.*<thead><tr>(.*?)<\/tr><\/thead><tbody>(.*?)<\/tbody>/)
-                                        
+
                                         //EXTRACT TITLE + GENERATE REFERENCE OBJECT
                                         target=(tables[table[1]]=[])
 
@@ -253,7 +253,7 @@ brewbox.factory('RecipeScraper', function($http, ParseService, $state, $ionicLoa
         }
 
         var _updateIngredientsList = function (ingredientsToAdd) {
-                
+
                 //SANITISE INPUT INGREDIENTs
                 newList = []
                 angular.forEach(ingredientsToAdd, function(recipe) {
@@ -285,7 +285,7 @@ brewbox.factory('RecipeScraper', function($http, ParseService, $state, $ionicLoa
                         }
 
                         $ionicLoading.show({ template: 'Updating Ingredients: ' + (ingredientIndex+1) + "/" + (ingredientsToAdd.length) });                        
-                        
+
                         (new Parse.Query("Ingredient"))
                         .equalTo("type", ingredientsToAdd[ingredientIndex].type)
                         .equalTo("name", ingredientsToAdd[ingredientIndex].name)
@@ -312,7 +312,64 @@ brewbox.factory('RecipeScraper', function($http, ParseService, $state, $ionicLoa
         return {
 
                 retrieveBrewtoadRecipeList: function() { _retrieveBrewtoadRecipeList() },
-                retrieveRecipeDetails: function(recipesToScrape) { _retrieveRecipeDetails(recipesToScrape) }
+
+                retrieveRecipeDetails: function(recipesToScrape) { _retrieveRecipeDetails(recipesToScrape) },
+
+                regulariseRecipe:function(recipeProfile, overrideAutoCollate){
+
+                        var deferred = $q.defer();
+
+                        //SANITISE INPUT INGREDIENTs
+                        ingredientList = []
+
+                        for(type in recipeProfile.ingredients) {
+                                angular.forEach(recipeProfile.ingredients[type], function(ingredient) {
+
+                                        exists=false;
+                                        if (!overrideAutoCollate) {
+                                                angular.forEach(ingredientList, function(existingItem,index) {
+                                                        if (existingItem.name==ingredient.name && existingItem.type == type) {exists=index};
+                                                })       
+                                        }
+
+                                        if (exists) { 
+                                                ingredientList[exists].amount=ingredientList[exists].amount+ingredient.amount
+                                        } else { 
+                                                ingredientList.push({ type:type, name:ingredient.name, amount:ingredient.amount })
+                                        }
+                                })
+                        }
+
+                        ingredientIndex=-1
+                        var regulariseIngredient=function() {
+
+                                ingredientIndex++
+
+                                if (ingredientIndex>ingredientList.length-1) {
+                                        deferred.resolve(ingredientList);
+                                        return
+                                }
+
+                                (new Parse.Query("Ingredient"))
+                                .equalTo("type", ingredientList[ingredientIndex].type)
+                                .equalTo("name", ingredientList[ingredientIndex].name)
+                                .include("parent")
+                                .find().then(function(result) {
+                                        result=result[0]
+                                        amount = ingredientList[ingredientIndex].amount
+                                        if(result.get("parent")) result=result.get("parent")
+                                        result.set("amount", amount)
+                                        ingredientList[ingredientIndex]=result
+                                        regulariseIngredient();
+                                })                               
+
+                        }
+                        regulariseIngredient()
+
+                        return deferred.promise;
+
+                }
+
 
         }
 

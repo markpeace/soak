@@ -2,6 +2,7 @@ brewbox.controller('RecipeProfile', function($scope, $stateParams, $ionicModal,R
 
 
         $scope.moment=moment
+        $scope.regularisedRecipe=[]               
         
         getRecipe = function() {
 
@@ -9,11 +10,16 @@ brewbox.controller('RecipeProfile', function($scope, $stateParams, $ionicModal,R
                 new Parse.Query(Parse.Object.extend("Recipe"))
                 .get($scope.selectedID).then(function(result) {
                         $scope.recipe = result
+                        $scope.recipe.regularisedRecipe=[1,2]
+                        
+			RecipeScraper.regulariseRecipe(result.get("profile")).then(function(result) {
+                                $scope.regularisedRecipe=result
+                        })
                         getBrewdays()
                 })
 
         }
-
+        
         $scope.brewdays=[]
         getBrewdays = function () {
                 new Parse.Query(Parse.Object.extend("Brewday"))
@@ -59,5 +65,7 @@ brewbox.controller('RecipeProfile', function($scope, $stateParams, $ionicModal,R
         $scope.refreshIngredients = function () {
                 RecipeScraper.retrieveRecipeDetails([$scope.recipe])
         }
-
+        
+      
+        
 });
