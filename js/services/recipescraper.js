@@ -317,8 +317,8 @@ brewbox.factory('RecipeScraper', function($http, ParseService, $q, $state, $ioni
 
                 regulariseRecipe:function(recipeProfile, overrideAutoCollate){
 
-                        var deferred = $q.defer();
-
+                        var deferred = $q.defer();                        
+                        
                         //SANITISE INPUT INGREDIENTs
                         ingredientList = []
 
@@ -356,7 +356,8 @@ brewbox.factory('RecipeScraper', function($http, ParseService, $q, $state, $ioni
                                 .include("parent")
                                 .find().then(function(result) {
                                         result=result[0]
-                                        amount = ingredientList[ingredientIndex].amount
+                                        //console.log(result.get("name"))
+                                        amount = ingredientList[ingredientIndex].amount ? ingredientList[ingredientIndex].amount : 1
                                         if(result.get("parent")) result=result.get("parent")
                                         result.set("amount", amount)
                                         ingredientList[ingredientIndex]=result
