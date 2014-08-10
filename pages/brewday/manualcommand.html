@@ -1,0 +1,12 @@
+<div class="ion-view">
+
+        <ion-list>
+                <ion-item 
+                          ng-repeat="command in commands" 
+                          ng-class="command.header ? 'item-divider' : ''"
+                          ng-click="!command.header ? execute(command) : ''">
+                        {{ command.name }}
+                </ion-item>
+        </ion-list>             
+
+</div>        
