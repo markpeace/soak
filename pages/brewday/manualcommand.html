@@ -1,12 +1,17 @@
-<div class="ion-view">
+<header class="bar bar-header bar-dark">
+        <h1 class="title">Manual Commands</h1>
+</header>
+<ion-content class="has-header">
+        <div class="ion-view">
 
-        <ion-list>
-                <ion-item 
-                          ng-repeat="command in commands" 
-                          ng-class="command.header ? 'item-divider' : ''"
-                          ng-click="!command.header ? execute(command) : ''">
-                        {{ command.name }}
-                </ion-item>
-        </ion-list>             
+                <ion-list>
+                        <ion-item 
+                                  ng-repeat="command in commands" 
+                                  ng-class="command.header ? 'item-divider' : ''"
+                                  ng-click="!command.header ? execute(command) : ''">
+                                {{ command.name }}
+                        </ion-item>
+                </ion-list>             
 
-</div>        
+        </div>        
+</ion-content>
