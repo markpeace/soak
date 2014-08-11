@@ -15,6 +15,7 @@ brewbox.controller('RecipeProfile', function($scope, $stateParams, $ionicModal,R
 			RecipeScraper.regulariseRecipe(result.get("profile")).then(function(result) {
                                 $scope.regularisedRecipe=result
                         })
+                        
                         getBrewdays()
                 })
 

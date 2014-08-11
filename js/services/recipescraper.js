@@ -317,10 +317,8 @@ brewbox.factory('RecipeScraper', function($http, ParseService, $q, $state, $ioni
 
                 regulariseRecipe:function(recipeProfile, overrideAutoCollate){
 
-                        var deferred = $q.defer();                        
-                        
                         //SANITISE INPUT INGREDIENTs
-                        ingredientList = []
+                        var ingredientList = []
 
                         for(type in recipeProfile.ingredients) {
                                 angular.forEach(recipeProfile.ingredients[type], function(ingredient) {
@@ -335,39 +333,24 @@ brewbox.factory('RecipeScraper', function($http, ParseService, $q, $state, $ioni
                                         if (exists) { 
                                                 ingredientList[exists].amount=ingredientList[exists].amount+ingredient.amount
                                         } else { 
-                                                ingredientList.push({ type:type, name:ingredient.name, amount:ingredient.amount })
+                                                ingredientList.push({ type:type, name:ingredient.name, amount:ingredient.amount || 1 })
                                         }
                                 })
                         }
 
-                        ingredientIndex=-1
-                        var regulariseIngredient=function() {
 
-                                ingredientIndex++
-
-                                if (ingredientIndex>ingredientList.length-1) {
-                                        deferred.resolve(ingredientList);
-                                        return
-                                }
-
-                                (new Parse.Query("Ingredient"))
-                                .equalTo("type", ingredientList[ingredientIndex].type)
-                                .equalTo("name", ingredientList[ingredientIndex].name)
+                        return $q.all(ingredientList.map(function(item, index) {
+                                return (new Parse.Query("Ingredient"))
+                                .equalTo("type", item.type)
+                                .equalTo("name", item.name)
                                 .include("parent")
                                 .find().then(function(result) {
-                                        result=result[0]
-                                        //console.log(result.get("name"))
-                                        amount = ingredientList[ingredientIndex].amount ? ingredientList[ingredientIndex].amount : 1
-                                        if(result.get("parent")) result=result.get("parent")
-                                        result.set("amount", amount)
-                                        ingredientList[ingredientIndex]=result
-                                        regulariseIngredient();
-                                })                               
+                                        r=result[0].get("parent") || result[0];
+                                        r.set("amount", ingredientList[index].amount)
+                                        return r 
+                                });
+                        }));
 
-                        }
-                        regulariseIngredient()
-
-                        return deferred.promise;
 
                 }
 

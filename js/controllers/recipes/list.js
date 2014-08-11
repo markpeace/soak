@@ -1,14 +1,25 @@
-brewbox.controller('ListRecipes', function($scope, ParseService, $ionicSideMenuDelegate, $stateParams, RecipeScraper) { 
+brewbox.controller('ListRecipes', function($scope, ParseService, $ionicSideMenuDelegate, $stateParams, $q, RecipeScraper) { 
 
         retrieveRecipes = function() {
                 new Parse.Query(Parse.Object.extend("Recipe"))
                 .ascending("name")
                 .find().then(function(result) {
-                        $scope.recipes = result
-                        angular.forEach(result, function(r) { 
-                        	//m = RecipeScraper.regulariseRecipe(r.get("recipe"))
+                        $scope.recipes = result   
+                        
+                        angular.forEach(result,function(r) { 
+                        
+                                r.ingredientsOnHand=0
+                                
+                        	RecipeScraper.regulariseRecipe(r.get('profile')).then(function(regularisedRecipe){
+                                        r.ingredientsOnHand=1
+                                        angular.forEach(regularisedRecipe, function(i) {
+                                                if((i.get("onHand")||0)-(i.get("amount")||0)<0) r.ingredientsOnHand=-1
+                                        })
+                                })
                         })
-                        $scope.$apply()
+                        
+                        $scope.$apply();
+
                 })
         };
         retrieveRecipes()
