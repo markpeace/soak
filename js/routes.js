@@ -69,6 +69,18 @@ brewbox.config(function($stateProvider, $urlRouterProvider) {
                         }
                 }
         })
+        .state('ui.schedule', {
+                url: '/schedule',
+                views: {
+                        'centre-panel': {
+                                templateUrl: 'pages/schedule/list.html',
+                                controller: 'ListSchedule'
+                        },
+                        'left-panel': {
+                                templateUrl: 'pages/menu.html'
+                        }
+                }
+        })
         $urlRouterProvider.otherwise("/ui/brewday");
 
 })
