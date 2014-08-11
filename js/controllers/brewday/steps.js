@@ -14,9 +14,9 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                         $scope.brewday=result[0]; result=result[0]                                               
 
                         //if (result[0].get("steps")) { return resumeBrewday() }
-
-                        if(moment(result.updatedAt) < moment().subtract("minutes", 15)) {
-                                RecipeScraper.retrieveRecipeDetails([result])	                                
+                        
+                        if(moment(result.get("recipe").updatedAt).isBefore(moment().subtract("minutes", 2))) {
+                                RecipeScraper.retrieveRecipeDetails([result.get("recipe")])	                                
                         } else {
                                 compileBrewParameters()
                         }
@@ -41,7 +41,7 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                         MSH_mashout_temp: 75,      						// in C
                         FMT_volume: recipe.batchSize,       					// in l
 
-                        CPR_hop_weight: recipe.total_hop,				 mmm      // in g
+                        CPR_hop_weight: recipe.total_hop,				       // in g
                         CPR_boiltime: 90,						          // in mins
 
 

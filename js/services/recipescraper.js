@@ -241,9 +241,8 @@ brewbox.factory('RecipeScraper', function($http, ParseService, $q, $state, $ioni
 
                                 //SAVE RECIPE PROFILE
                                 recipesToScrape[recipeIndex].set("profile", recipeProfile)
-                                recipesToScrape[recipeIndex].save()
+                                recipesToScrape[recipeIndex].save().then(scrapeRecipe)
 
-                                scrapeRecipe();
                         })
 
 
