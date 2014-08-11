@@ -4,56 +4,59 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
         HardwareInterface.requestQueue.push({ port: 200, command: "HLT SET VOL 35" })
         HardwareInterface.requestQueue.push({ port: 200, command: "HLT SET TEMP 74" })
 
-       /* var getRecipe = function () {
-                return compileBrewParameters();
+        var getRecipe = function () {
+
                 (new Parse.Query("Brewday"))
                 .equalTo("objectId", $stateParams.id)
                 .include("recipe")          
                 .find().then(function(result) {
                         if(result.length==0) {$state.go("ui.splash")}
-                        $scope.brewday=result[0]
-                        if(result[0].get("steps")) { resumeBrewday(); } else { compileBrewParameters(); }
-                        //compileBrewParameters();
+                        $scope.brewday=result[0]; result=result[0]                                               
+
+                        //if (result[0].get("steps")) { return resumeBrewday() }
+
+                        if(moment(result.updatedAt) < moment().subtract("minutes", 15)) {
+                                RecipeScraper.retrieveRecipeDetails([result])	                                
+                        } else {
+                                compileBrewParameters()
+                        }
+
                 })
 
         }
-        getRecipe();*/
+        getRecipe();
 
 
         var compileBrewParameters = function () {
-                //RecipeScraper.updateRecipeXML($scope.brewday.get("recipe"))
 
-                $scope.$watch('$scope.brewday.get("recipe").get("xml")', function(val){
-                        //x	recipeParameters = $scope.brewday.get("recipe").get("xml")
+                recipe=$scope.brewday.get("recipe").get("profile")
 
-                        brewParameters={
+                brewParameters={                        
 
-                                // VARIABLES WHICH CHANGE DEPENDING ON THE RECIPE
-                                MSH_grain_weight: 6.175, //recipeParameters.ingredients.total_fermentables,       // in kg
-                                MSH_temperature: parseInt(prompt("Preferred Mash Temperature", 67)),       // in C
-                                MSH_thickness: 2.75,       // in l/kg
-                                MSH_time: parseInt(prompt("Preferred Mash Time", 60)),              // in mins
-                                MSH_mashout_temp: 75,      // in C
-                                FMT_volume: 24,            // in l
+                        // VARIABLES WHICH CHANGE DEPENDING ON THE RECIPE
+                        MSH_grain_weight: recipe.total_fermentable/1000,     			// in kg
+                        MSH_temperature: recipe.mash_steps[0]['target temp'],       		// in C
+                        MSH_thickness: 2.75,       						// in l/kg
+                        MSH_time: recipe.mash_steps[0]['time'],              			// in mins
+                        MSH_mashout_temp: 75,      						// in C
+                        FMT_volume: recipe.batchSize,       					// in l
 
-                                CPR_hop_weight: 163, //recipeParameters.ingredients.total_hops,       // in g
-                                CPR_boiltime: 120, //recipeParameters.boiltime,           // in mins
+                        CPR_hop_weight: recipe.total_hop,				 mmm      // in g
+                        CPR_boiltime: 90,						          // in mins
 
 
-                                // EQUIPMENT PROFILE
-                                HLT_deadspace: 1,          // in l
-                                HLT_groundwater_temp:10,   // in c
-                                HLT_minimum_volume: 20,    // in l - without this, the heat coil wouldn't work
-                                MSH_deadspace: 2,          // in l
-                                MSH_ambient_temp: 15,      // in c
-                                CPR_deadspace: 2,          // in l
-                                CPR_evaporationrate: 20,   // in %
-                                CPR_shrinkage: 4,          // in %
-                        }
+                        // EQUIPMENT PROFILE
+                        HLT_deadspace: 1,          // in l
+                        HLT_groundwater_temp:10,   // in c
+                        HLT_minimum_volume: 20,    // in l - without this, the heat coil wouldn't work
+                        MSH_deadspace: 2,          // in l
+                        MSH_ambient_temp: 15,      // in c
+                        CPR_deadspace: 2,          // in l
+                        CPR_evaporationrate: 20,   // in %
+                        CPR_shrinkage: 4,          // in %
+                }
 
-                        calculateParameters(brewParameters)                       
-
-                }, true);
+                calculateParameters(brewParameters)                       
 
         }
 
@@ -120,7 +123,7 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                 me.HLT_waste_water = me.HLT_volume_after_second_addition - (me.MSH_second_water_volume + me.MSH_third_water_volume)                               
 
                 console.log(me)
-                
+
                 calculateBrewSteps(me)
 
 
@@ -296,7 +299,7 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
                                 hardwareReference: "msh",
                                 hardwareVariable: "pumpActivatedFor"
                         }
-                        
+
                 ], function (step) {
                         newStep = new stepTemplate
                         angular.forEach(step, function(value,key) { newStep[key]=value })
@@ -317,7 +320,7 @@ brewbox.controller('Steps', function($scope, HardwareInterface, $stateParams, $s
 
                 console.log("resumed")
         }        
-        
-        compileBrewParameters();
+
+        //compileBrewParameters();
 
 });

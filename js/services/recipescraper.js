@@ -230,8 +230,9 @@ brewbox.factory('RecipeScraper', function($http, ParseService, $q, $state, $ioni
                                 if (err) { alert("The recipe for " +recipesToScrape[recipeIndex].get("name")+ " was incomplete:\n"+err) }
 
                                 for(ingredientType in recipeProfile.ingredients) {
+                                        recipeProfile['total_'+ingredientType]=0
                                         angular.forEach(recipeProfile.ingredients[ingredientType], function(ingredient) {
-                                                recipeProfile['total_'+ingredientType]=(recipeProfile.ingredients['total_'+ingredientType]|0)+(ingredient.amount  ? ingredient.amount : 1)
+                                               recipeProfile['total_'+ingredientType]+=ingredient.amount||1
                                         })
                                 }
 
