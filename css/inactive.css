@@ -1,0 +1,25 @@
+.inactive {
+        text-align:center;
+        //background-color:blue;
+        position:absolute;
+        top: 15%; left:0%; right:0%;              
+}
+
+.inactive .logo {
+        font-size:500%;   
+}
+
+.inactive .subtitle {
+        font-size:110%;   
+        letter-spacing: 3px;
+        line-height: 150%;
+}
+
+.inactive .tapnotice {
+        font-size:60%;  
+        line-height: 200%;
+
+        letter-spacing: 1px;
+}
+
+.inactive div { line-height: 120%; }

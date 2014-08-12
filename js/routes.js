@@ -2,9 +2,9 @@ brewbox.config(function($stateProvider, $urlRouterProvider) {
 
         $stateProvider
 
-        .state('home', {
+        .state('inactive', {
                 url:"/",
-                templateUrl: 'pages/home.html',
+                templateUrl: 'pages/inactive.html',
                 //controller: 'Home'
         })
         
