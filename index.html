@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+        <head>
+                <title>Soak</title>
+
+                <meta charset="utf-8">
+                <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+
+                <link rel="stylesheet" href="css/_base.css">
+
+                <!-- CDN libraries -->
+                <script src="bower_components/angular/angular.min.js"></script>  
+                <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>  
+                <script src="bower_components/jquery/dist/jquery.min.js"></script>  
+
+                <!-- Needed for Cordova/PhoneGap 
+<script type="text/javascript" src="cordova.js"></script>-->
+
+
+                <!-- Application Structure -->
+                <script src="js/app.js"></script>
+                <script src="js/routes.js"></script>
+
+                <script src="js/controllers/inactive.js"></script>
+                <script src="js/controllers/active.js"></script>
+
+
+        </head>
+
+        <body>             
+                <script>
+                       // document.body.addEventListener('touchmove', function(event) {
+                       //         event.preventDefault();
+                       // }, false);
+                </script>
+
+                <div ui-view></div>
+        </body>
+</html>
+

@@ -1,0 +1,32 @@
+
+<div style="float:left; width:50%; font-size:1.5em; margin-top: 5%;">
+        {{ controlValues.actTemp }}&deg;
+</div>
+<div style="float:left; width:50%; font-size:1.5em; margin-top: 5%;">
+        {{ controlValues.actDepth }}l
+</div>
+
+<div style="	
+            position: absolute;
+            padding-bottom: 80%;
+            bottom:20%; left:0%; right: 0px;
+            height: 0;">
+
+        <svg id="controlBoundaries" viewBox="-50 -50 100 100" preserveAspectRatio="YMax" style="
+                                                                                                position: absolute;
+                                                                                                top: 0;
+                                                                                                left: 0;
+                                                                                                width: 100%;
+                                                                                                height: 100%;">
+
+                <rect x="-50" y="-50" width="100" height="100"
+                      style="stroke: #000000; fill:none;"/>
+
+                <rect id="controlRect" ng-x="{{ controlRect.x }}" ng-y="{{ controlRect.y }}" ng-width="{{ controlRect.width }}" ng-height="{{ controlRect.height }}" ng-fill="{{ controlRect.color }}"></rect>
+
+
+        </svg>
+
+
+</div>
+
