@@ -1,3 +1,3 @@
 soak.controller('Inactive', function() { 
-        console.log("inactie")
+        console.log("inactive")
 });
