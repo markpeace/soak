@@ -88,6 +88,7 @@
         <!--<gap:plugin name="com.phonegap.plugins.pushplugin" version="2.1.1" />-->
 
         <!-- Define app icon for each platform. -->      
+        <icon src="icon.png" />
 
         <!--
         Define access to external domains.
