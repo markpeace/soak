@@ -18,6 +18,11 @@ soak.config(function($stateProvider, $urlRouterProvider) {
                 templateUrl: "pages/active.html", 
                 controller: "Active" 
         })
+        .state('filling', {
+                url: "/filling",    
+                templateUrl: "pages/filling.html", 
+                controller: "Filling" 
+        })
 
         $urlRouterProvider.otherwise("/initialising");
 
