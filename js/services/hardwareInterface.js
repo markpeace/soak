@@ -6,7 +6,7 @@ brewbox.factory('HardwareInterface', function($http, $interval) {
                 activated: false,
                 pulseInterval: 1000,
                 requestsMade: 0,
-                server: 'http://telnetservice.herokuapp.com/telnet/bowerfold.dlinkddns.com'
+                server: 'http://mptoolbox.herokuapp.com/telnet/bowerfold.dlinkddns.com'
         }
 
         var hardwareReadings= {

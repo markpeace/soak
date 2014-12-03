@@ -1,7 +1,13 @@
 soak.config(function($stateProvider, $urlRouterProvider) {
 
         $stateProvider
-
+        
+        .state('initialising', {
+                url: "/initialising",    
+                templateUrl: "pages/initialising.html", 
+                controller: "Intialising" 
+        })        
+        
         .state('inactive', {
                 url: "/inactive",    
                 templateUrl: "pages/inactive.html", 
@@ -13,6 +19,6 @@ soak.config(function($stateProvider, $urlRouterProvider) {
                 controller: "Active" 
         })
 
-        $urlRouterProvider.otherwise("/inactive");
+        $urlRouterProvider.otherwise("/initialising");
 
 })
