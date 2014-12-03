@@ -1,9 +1,9 @@
-soak.controller('Active', function($scope) { 
-        console.info("controller handed over to: inactive.js")
+soak.controller('Active', function($scope, $state) { 
+        console.info("controller handed over to: active.js")
         
         console.warn("this page needs rewriting to be based on autocalculation of timings based on desired depth and temperature")
         console.warn("this page needs reformatting to be driven by a drag-and-drop graphical interface")
-
+                
         $scope.params = [
                 { hint: 'Wait Time (mins)', value: null },             
                 { hint: 'Hot Time (mins)', value: null },                
@@ -11,6 +11,8 @@ soak.controller('Active', function($scope) {
         ]
         
         $scope.submit = function () {
-                console.log($scope.params)
+                console.warn("autocalculations need to happen here")
+                console.warn("Need to send new parameters, and only redirect on receipt of acknowledgement which should send to...")
+                $state.go("filling")
         }
 });
