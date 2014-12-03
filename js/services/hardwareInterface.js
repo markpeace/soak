@@ -1,7 +1,30 @@
-brewbox.factory('HardwareInterface', function($http, $interval) {
-            
-        
-/*
+soak.factory('HardwareInterface', function($http, $q) {
+
+        var settings = {
+                server: 'http://mptoolbox.herokuapp.com/telnet/bowerfold.dlinkddns.com/',
+                port: 200
+        }
+
+
+        return {
+
+                ping: function () {
+
+                },
+                toggleActivation:function() {
+                        return $q.all(
+                                $http({method: 'GET', url: settings.server+"/"+settings.port+"/a" })
+                        )
+
+                },
+                setParameters:function(waitTime, hotTime, coldTime) {
+
+                }
+
+        }
+
+
+        /*
         var settings = {
                 activated: false,
                 pulseInterval: 1000,
@@ -33,7 +56,7 @@ brewbox.factory('HardwareInterface', function($http, $interval) {
 
         processRequest = function () {
                 settings.requestsMade++;        
-                
+
                 if (requestQueue.length==0) { return; }
 
                 var currentRequest = requestQueue[0];
