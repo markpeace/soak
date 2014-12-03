@@ -15,4 +15,10 @@ soak.controller('Active', function($scope, $state) {
                 console.warn("Need to send new parameters, and only redirect on receipt of acknowledgement which should send to...")
                 $state.go("filling")
         }
+        
+        $scope.deactivate=function() {
+                console.warn("needs to send deactivation ping, and only when this is acknowledged, redirect to...")
+                $state.go("inactive")
+        }
+        
 });
