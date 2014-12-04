@@ -9,13 +9,15 @@ soak.factory('HardwareInterface', function($http, $q) {
         return {
 
                 ping: function () {
+                        return $q.all(
+                                $http({method: 'GET', url: settings.server+"/"+settings.port+"/p" })
+                        )
 
                 },
                 toggleActivation:function() {
                         return $q.all(
                                 $http({method: 'GET', url: settings.server+"/"+settings.port+"/a" })
                         )
-
                 },
                 setParameters:function(waitTime, hotTime, coldTime) {
                         return $q.all(                                                               
