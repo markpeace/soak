@@ -6,18 +6,25 @@
         SOAK
 </p>
 
-<p ng-click="activate()"
+<p 
    style="bottom:25%;
           font-size:100%;
           ">
         Filling
 </p>
 
-<p ng-click="activate()"
+<p 
    style="bottom:25%;
           font-size:100%;
           ">
         Waiting: {{ params.waitendPercentage }}%<br/>
         Hot Water: {{ params.hotendPercentage }}%<br/>
         Cold Water: {{params.coldendPercentage }}%
+</p>
+
+<p ng-click="deactivate();"
+   style="bottom:25%;
+          font-size:100%;
+          ">
+        [DEACTIVATE SYSTEM]
 </p>

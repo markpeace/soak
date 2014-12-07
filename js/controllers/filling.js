@@ -22,18 +22,18 @@ soak.controller('Filling', function($scope, $state,$interval, HardwareInterface)
         refreshParams=function () {
 
                 prevendTime=$scope.params.startTime;
-                
+
                 ['wait','hot','cold'].forEach(function(p) {
 
                         if($scope.params.currentTime>$scope.params[p+"endTime"]) {
                                 $scope.params[p+"endPercentage"]=100
                         } else {
                                 $scope.params[p+"endPercentage"]=Math.round(100 * (($scope.params.currentTime-prevendTime)/
-                                                                        ($scope.params[p+"endTime"]-prevendTime)))
-                                
+                                                                                   ($scope.params[p+"endTime"]-prevendTime)))
+
                                 if($scope.params[p+"endPercentage"]<0) { $scope.params[p+"endPercentage"]=0 }
                         }
-                        
+
                         prevendTime=$scope.params[p+"endTime"]
 
                 })
@@ -45,10 +45,18 @@ soak.controller('Filling', function($scope, $state,$interval, HardwareInterface)
                 $scope.params.currentTime=$scope.params.currentTime+1000
                 refreshParams();
         },1000)
-        
+
         $scope.$on("$destroy", function(){
                 $interval.cancel(interval);
         });
+
+        $scope.deactivate=function() {
+                HardwareInterface.toggleActivation().then(function(result) {
+                        if(result.data==0) {
+                                $state.go("inactive")                        
+                        } 
+                })
+        }
 
 
 });
