@@ -21,8 +21,11 @@ soak.controller('Active', function($scope, $state, HardwareInterface) {
         }
 
         $scope.deactivate=function() {
-                console.warn("needs to send deactivation ping, and only when this is acknowledged, redirect to...")
-                $state.go("inactive")
+                HardwareInterface.toggleActivation().then(function(result) {
+                        if(result.data==0) {
+                                $state.go("inactive")                        
+                        } 
+                })
         }
 
 });
