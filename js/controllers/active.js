@@ -6,7 +6,7 @@ soak.controller('Active', function($scope, $state, HardwareInterface) {
         $scope.params = [
                 { hint: 'Time until bath (mins)', value: null },             
                 { hint: 'Desired Temperature (degC)', value: null },                
-                { hint: 'Depth (litres)', value: null }                
+                { hint: 'Depth (% Full)', value: null }                
         ]
 
         $scope.submit = function () {
@@ -41,6 +41,8 @@ soak.controller('Active', function($scope, $state, HardwareInterface) {
 
                 }
 
+                p.target.depth=(p.target.depth/100) * p.limit.depth               
+                
                 if (p.target.depth>p.limit.depth) p.target.depth=p.limit.depth
                 if (p.target.temp>p.limit.temperature) p.target.temp=p.limit.temperature
 
