@@ -38,7 +38,7 @@ soak.controller('Filling', function($scope, $state,$interval, HardwareInterface)
 
                 })
 
-                console.log($scope.params)
+                //console.log($scope.params)
         }
 
         interval=$interval(function(){
