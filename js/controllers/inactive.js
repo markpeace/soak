@@ -1,7 +1,7 @@
 soak.controller('Inactive', function($scope, $state, HardwareInterface) { 
         console.info("controller handed over to: inactive.js")
 
-        $scope.buttonText="Connecting to System..."
+        $scope.message="Connecting to System..."
 
 
         HardwareInterface.ping().then(function(r) {
@@ -16,7 +16,7 @@ soak.controller('Inactive', function($scope, $state, HardwareInterface) {
                         
                           
                 } else {
-                        $scope.buttonText="[ACTIVATE SYSTEM]"
+                        $scope.message="CLICK ICON AT THE TOP LEFT TO ACTIVATE"
                 }
         })
 
@@ -24,14 +24,14 @@ soak.controller('Inactive', function($scope, $state, HardwareInterface) {
 
         $scope.activate = function () {
 
-                $scope.buttonText="Activating..."
+                $scope.message="Activating System..."
 
                 HardwareInterface.toggleActivation().then(function(result) {
                         if(result.data==1) {
-                                $scope.buttonText="Activated"
+                                $scope.message="Activated"
                                 $state.go("active")                        
                         } else {
-                                $scope.buttonText="[ACTIVATE SYSTEM]"                                
+                                $scope.message="CLICK ICON AT THE TOP LEFT TO ACTIVATE"                               
                         }
                 })
 

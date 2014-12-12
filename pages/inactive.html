@@ -1,14 +1,23 @@
-<p style="
-          top:10%;
-          font-size:400%;
-          letter-spacing:5px;
-          ">
-        SOAK
-</p>
+<ion-view>
+        <div class="bar bar-header bar-calm">
+                <button class="button button-icon icon ion-toggle-filled" ng-click="activate()">ON</button>
+                <div class="h1 title">SOAK</div>
+        </div>
 
-<p ng-click="activate()"
-   style="bottom:25%;
-          font-size:100%;
-          ">
-        {{buttonText}}
-</p>
+        <ion-content class="has-header has-padding">                    
+
+                <div style="font-size:6em; text-align:center; padding-top:33%;">
+                        SOAK
+                </div>
+
+                <div style="font-size:1.5em; text-align:center; padding-top:10%;">
+                        AUTOMATED BATHING
+                </div>
+
+                <div style="font-size:0.8em; text-align:center; padding-top:35%;" ng-click="activate()">
+                        {{ message }}
+                </div>
+
+
+        </ion-content>
+</ion-view>
