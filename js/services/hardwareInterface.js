@@ -19,9 +19,9 @@ soak.factory('HardwareInterface', function($http, $q) {
                                 $http({method: 'GET', url: settings.server+"/"+settings.port+"/a" })
                         )
                 },
-                setParameters:function(waitTime, hotTime, coldTime) {
+                setParameters:function(p) {
                         return $q.all(                                                               
-                                $http({method: 'GET', url: settings.server+"/"+settings.port+"/"+waitTime+";"+hotTime+";"+coldTime })
+                                $http({method: 'GET', url: settings.server+"/"+settings.port+"/"+p.wait+";"+p.hot+";"+p.cold })
                         )
                 }
 

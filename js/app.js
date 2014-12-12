@@ -2,7 +2,7 @@ angular.element(document).ready(function() {
         angular.bootstrap(document, ["soak"]);
 });
 
-var soak = angular.module('soak', ['ui.router'])
+var soak = angular.module('soak', ['ui.router', 'ionic'])
 
 angular.forEach(['x', 'y', 'width', 'height', 'fill'], function(name) {
         var ngName = 'ng' + name[0].toUpperCase() + name.slice(1);
