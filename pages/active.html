@@ -1,6 +1,6 @@
 <ion-view>
         <div class="bar bar-header bar-calm">
-                <button class="button button-icon icon ion-toggle-filled" ng-click="deactivate()">OFF</button>
+                <button class="button button-icon icon ion-toggle-filled" ng-click="deactivate()"></button>
                 <div class="h1 title">SOAK</div>
         </div>
 
@@ -41,31 +41,33 @@
                 <div class="card">
 
                         <div class="item range range-positive">                                
-                                <i class="icon ion-ios7-timer"></i>
+                                <i class="icon ion-ios7-arrow-thin-down"></i>
                                 <input type="range" min="0" max="240" ng-model="params.delay">
-                                <i class="icon ion-ios7-timer-outline"></i>
+                                <i class="icon ion-ios7-stopwatch-outline"></i>
                         </div>
 
                         <div class="item range range-positive">
                                 <i class="icon ion-ios7-snowy"></i>
                                 <input type="range" min="20" max="50" ng-model="params.temperature">
-                                <i class="icon ion-ios7-flame"></i>
-                        </div>
+                                <i class="icon ion-flame"></i>
+
+                       </div>
 
                         <div class="item range range-positive">
-                                <i class="icon ion-ios7-circle-outline"></i>
+                                <i class="icon ion-ios7-star-half"></i>
                                 <input type="range" min="0" max="100" ng-model="params.fullness">
-                                <i class="icon ion-ios7-circle"></i>
+                                <i class="icon ion-ios7-star"></i>
                         </div>                       
 
                 </div>
 
-                <br/>
-
+                </br>
+                
                 <button class="item button button-full button-calm" ng-click="send()">
                         {{ buttonText }}
                 </button>
 
 
         </ion-content>
+
 </ion-view>
